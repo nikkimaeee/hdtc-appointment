@@ -70,15 +70,18 @@
           <div class="p-formgrid grid">
             <div class="field col">
               <label htmlFor="email"
-                >Phone <span style="color: red">*</span></label
+                >Mobile Number <span style="color: red">*</span></label
               >
-              <p-inputMask
-                mask="(999) 999-9999"
-                formControlName="phone"
-                placeholder="(999) 999-9999"
-                [ngClass]="{
-                  'ng-dirty': validateControl('phone')
-                }"></p-inputMask>
+              <div class="p-inputgroup">
+                <span class="p-inputgroup-addon">+63</span>
+                <p-inputMask
+                  mask="999-999-9999"
+                  formControlName="phone"
+                  placeholder="999-999-9999"
+                  [ngClass]="{
+                    'ng-dirty': validateControl('phone')
+                  }"></p-inputMask>
+              </div>
               <small *ngIf="validateControl('phone')" class="p-error">
                 <span *ngIf="userForm.get('phone')?.errors?.['required']"
                   >Phone is Required.</span
