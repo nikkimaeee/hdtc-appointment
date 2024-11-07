@@ -1,0 +1,83 @@
+.bg-login-img {
+  background: url('../../../assets/img/login-sidebg.jpg');
+  background-position: center;
+  background-size: cover;
+  border-radius: 1.25rem 0 0 1.25rem;
+}
+
+.bg-login {
+  background: url('../../../assets/img/login-bg.jpg') no-repeat center center
+    fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  min-height: 100%;
+
+  /* Set up proportionate scaling */
+  width: 100%;
+  height: auto;
+
+  /* Set up positioning */
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.btn-login {
+  font-size: 1rem;
+  border-radius: 1.25rem;
+  padding: 0.75rem 1rem;
+}
+.btn-block {
+  display: block;
+  width: 100%;
+}
+
+.btn-block + .btn-block {
+  margin-top: 0.5rem;
+}
+
+input[type='submit'].btn-block,
+input[type='reset'].btn-block,
+input[type='button'].btn-block {
+  width: 100%;
+}
+
+.login-section {
+  padding: 10.25em 0;
+}
+.wrap {
+  width: 100%;
+}
+.login-wrap {
+  width: 50%;
+}
+@media (max-width: 991.98px) {
+  .login-wrap {
+    width: 100%;
+  }
+}
+.login-wrap {
+  position: inherit;
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: 0 1.25rem 1.25rem 0;
+}
+@media (max-width: 767.98px) {
+  .login-wrap {
+    border-radius: 1.25rem;
+  }
+}
+.login-wrap h3 {
+  font-weight: 450;
+  font-size: 3rem;
+}
+.login-wrap h6 {
+  font-weight: 200;
+}
+.form-control {
+  height: 3.438rem;
+  background: rgba(0, 0, 0, 0.05);
+  color: rgb(32, 32, 32);
+  font-size: 16px;
+}

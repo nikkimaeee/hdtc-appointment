@@ -1,0 +1,209 @@
+<div class="p-fluid formgrid grid">
+  <div class="col-lg-12">
+    <div class="card border-0 rounded-lg">
+      <div class="card-header justify-content-center bg-white border-0">
+        <h3 class="my-2">{{ title }}</h3>
+      </div>
+    </div>
+    <div class="row p-fluid formgrid grid bg-white p-5 rounded-4">
+      <div class="col-12 md:col-12">
+        <form
+          class="mt-4"
+          [formGroup]="userForm"
+          autocomplete="off"
+          (submit)="save()">
+          <div class="p-formgrid grid">
+            <div class="field col">
+              <label htmlFor="firstName"
+                >First Name <span style="color: red">*</span></label
+              >
+              <input
+                pInputText
+                id="firstName"
+                formControlName="firstName"
+                type="text"
+                [ngClass]="{
+                  'ng-dirty': validateControl('firstName')
+                }" />
+              <small *ngIf="validateControl('firstName')" class="p-error"
+                >First Name is required.</small
+              >
+            </div>
+            <div class="field col">
+              <label htmlFor="lastName"
+                >Last Name <span style="color: red">*</span></label
+              >
+              <input
+                pInputText
+                id="lastName"
+                formControlName="lastName"
+                type="text"
+                [ngClass]="{ 'ng-dirty': validateControl('lastName') }" />
+              <small *ngIf="validateControl('lastName')" class="p-error"
+                >Last Name is required.</small
+              >
+            </div>
+          </div>
+          <div class="p-formgrid grid">
+            <div class="field col">
+              <label htmlFor="email"
+                >Email <span style="color: red">*</span></label
+              >
+              <input
+                pInputText
+                id="email"
+                formControlName="email"
+                type="email"
+                [ngClass]="{
+                  'ng-dirty': validateControl('email')
+                }" />
+              <small *ngIf="validateControl('email')" class="p-error">
+                <span *ngIf="userForm.get('email')?.errors?.['required']"
+                  >Email is Required.</span
+                >
+                <span *ngIf="userForm.get('email')?.errors?.['email']"
+                  >Invalid Email Format.</span
+                >
+              </small>
+            </div>
+            <div class="field col">
+              <label htmlFor="lastName"
+                >Role <span style="color: red">*</span></label
+              >
+              <p-dropdown
+                [options]="roles"
+                placeholder="Select User Role"
+                optionLabel="name"
+                [showClear]="true"
+                formControlName="role"
+                optionValue="name"
+                [ngClass]="{
+                  'ng-dirty': validateControl('role')
+                }"></p-dropdown>
+              <small *ngIf="validateControl('role')" class="p-error"
+                >Role is required.</small
+              >
+            </div>
+          </div>
+          <div class="p-formgrid grid">
+            <div class="field col">
+              <label htmlFor="email"
+                >Phone <span style="color: red">*</span></label
+              >
+              <p-inputMask
+                mask="(999) 999-9999"
+                formControlName="phone"
+                placeholder="(999) 999-9999"
+                [ngClass]="{
+                  'ng-dirty': validateControl('phone')
+                }"></p-inputMask>
+              <small *ngIf="validateControl('phone')" class="p-error">
+                <span *ngIf="userForm.get('phone')?.errors?.['required']"
+                  >Phone is Required.</span
+                >
+              </small>
+            </div>
+            <div class="field col">
+              <label
+                class="mb-2"
+                *ngIf="userForm.get('role')?.value === 'Patient'"
+                >Check all status applicable</label
+              >
+              <div
+                class="row"
+                *ngIf="userForm.get('role')?.value === 'Patient'">
+                <div class="field-checkbox col-md-12 col-lg-4">
+                  <p-checkbox
+                    formControlName="isPwd"
+                    [binary]="true"
+                    inputId="isPwd"
+                    (onChange)="OnCheckBoxCheck($event, 'isPwd')"></p-checkbox>
+                  <label for="isPwd">PWD</label>
+                </div>
+                <div class="field-checkbox col-md-12 col-lg-4">
+                  <p-checkbox
+                    formControlName="isSenior"
+                    [binary]="true"
+                    inputId="isSenior"
+                    (onChange)="
+                      OnCheckBoxCheck($event, 'isSenior')
+                    "></p-checkbox>
+                  <label for="isSenior">Senior Citizen</label>
+                </div>
+                <div class="field-checkbox col-md-12 col-lg-4">
+                  <p-checkbox
+                    formControlName="isPregnant"
+                    [binary]="true"
+                    inputId="isPregnant"
+                    (onChange)="
+                      OnCheckBoxCheck($event, 'isPregnant')
+                    "></p-checkbox>
+                  <label for="isPregnant">Pregnant</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="p-formgrid grid">
+            <div class="field col">
+              <label htmlFor="password"
+                >Password <span style="color: red">*</span></label
+              >
+              <p-password
+                id="password"
+                formControlName="password"
+                [ngClass]="{
+                  'ng-dirty': validateControl('password')
+                }"
+                (onBlur)="changePassword()"
+                autocomplete="new-password"></p-password>
+              <small *ngIf="validateControl('password')" class="p-error">
+                <span *ngIf="userForm.get('password')?.errors?.['required']"
+                  >Password is Required</span
+                >
+                <span *ngIf="userForm.get('password')?.errors?.['pattern']"
+                  >Password must contain:
+                  <ul>
+                    <li>At least one lowercase</li>
+                    <li>At least one uppercase</li>
+                    <li>At least one numeric</li>
+                    <li>Minimum 8 characters</li>
+                  </ul>
+                </span>
+              </small>
+            </div>
+            <div class="field col">
+              <label htmlFor="confirmPassword"
+                >Confirm Password <span style="color: red">*</span></label
+              >
+              <p-password
+                id="confirmPassword"
+                formControlName="confirmPassword"
+                [ngClass]="{ 'ng-dirty': validateControl('confirmPassword') }"
+                [feedback]="false"
+                (onBlur)="changePassword()"></p-password>
+              <small *ngIf="validateControl('confirmPassword')" class="p-error"
+                ><span
+                  *ngIf="userForm.get('confirmPassword')?.errors?.['required']"
+                  >Confirm Password is Required.</span
+                >
+                <span
+                  *ngIf="userForm.get('confirmPassword')?.errors?.['confirmPasswordValidator']"
+                  >Passsword and Confirm Password didn't match.</span
+                >
+              </small>
+            </div>
+          </div>
+          <div class="grid grid-nogutter justify-content-end">
+            <p-button
+              label="Save"
+              (onClick)="save()"
+              icon="pi pi-save"
+              iconPos="right"
+              styleClass="p-button-success"
+              [disabled]="userForm.invalid"></p-button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,125 @@
+<div class="p-fluid formgrid grid">
+  <div class="col-12">
+    <div class="card border-0 rounded-lg">
+      <div class="card-header justify-content-center bg-white border-0">
+        <h3 class="my-2">{{ title }}</h3>
+      </div>
+    </div>
+    <div class="row p-fluid formgrid grid bg-white p-5 rounded-4">
+      <div class="col-12 md:col-12">
+        <form
+          class="mt-4"
+          [formGroup]="productForm"
+          autocomplete="off"
+          (submit)="save()">
+          <div class="p-formgrid grid">
+            <div class="field col-12 md:col-6 lg:col-6">
+              <label htmlFor="name"
+                >Service Name <span style="color: red">*</span></label
+              >
+              <input
+                pInputText
+                id="name"
+                formControlName="name"
+                type="text"
+                [ngClass]="{
+                  'ng-dirty': validateControl('name')
+                }" />
+              <small *ngIf="validateControl('name')" class="p-error"
+                >Name is required.</small
+              >
+            </div>
+            <div class="field col-12 md:col-6 lg:col-6">
+              <label htmlFor="code"
+                >Code <span style="color: red">*</span></label
+              >
+              <input
+                pInputText
+                id="code"
+                formControlName="code"
+                type="text"
+                [ngClass]="{
+                  'ng-dirty': validateControl('code')
+                }" />
+              <small *ngIf="validateControl('code')" class="p-error"
+                >Code is required.</small
+              >
+            </div>
+          </div>
+          <div class="p-formgrid grid">
+            <div class="field col-12 md:col-6 lg:col-6">
+              <label htmlFor="description"
+                >Description <span style="color: red">*</span></label
+              >
+              <textarea
+                pInputTextarea
+                formControlName="description"
+                [rows]="5"
+                placeholder="Description"
+                [ngClass]="{
+                  'ng-dirty': validateControl('description')
+                }"></textarea>
+              <small *ngIf="validateControl('description')" class="p-error"
+                >Description is required.</small
+              >
+            </div>
+            <div class="field col-12 md:col-6 lg:col-6">
+              <label htmlFor="thumbnail"
+                >Thumbnail <span style="color: red">*</span></label
+              >
+              <p-fileUpload
+                #fileUpload
+                [customUpload]="true"
+                [showCancelButton]="false"
+                [showUploadButton]="false"
+                (onSelect)="uploadFile($event)"></p-fileUpload>
+            </div>
+          </div>
+          <div class="p-formgrid grid">
+            <div class="field col-12 md:col-6 lg:col-6">
+              <label htmlFor="price"
+                >Price (Php)<span style="color: red">*</span></label
+              >
+              <input
+                pInputText
+                id="price"
+                formControlName="price"
+                type="number"
+                [ngClass]="{
+                  'ng-dirty': validateControl('price')
+                }" />
+              <small *ngIf="validateControl('price')" class="p-error"
+                >Price is required.</small
+              >
+            </div>
+            <div class="field col-12 md:col-6 lg:col-6">
+              <label htmlFor="duration"
+                >Duration (hrs)<span style="color: red">*</span></label
+              >
+              <p-inputNumber
+                formControlName="duration"
+                mode="decimal"
+                [showButtons]="true"
+                inputId="minmax-buttons"
+                [min]="1"
+                [max]="8">
+              </p-inputNumber>
+              <small *ngIf="validateControl('duration')" class="p-error"
+                >Duration is required.</small
+              >
+            </div>
+          </div>
+          <div class="grid grid-nogutter justify-content-end">
+            <p-button
+              label="Save"
+              (onClick)="save()"
+              icon="pi pi-save"
+              iconPos="right"
+              styleClass="p-button-success"
+              [disabled]="productForm.invalid"></p-button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,303 @@
+<div class="grid">
+  <div class="col-12">
+    <div class="card border-0 rounded-lg">
+      <div class="card-header justify-content-center bg-white border-0">
+        <h3 class="my-2">Create Appointment</h3>
+      </div>
+    </div>
+    <div class="p-fluid formgrid grid card border-0 rounded-lg">
+      <div class="col-12 field-checkbox">
+        <p-checkbox
+          [(ngModel)]="newPatient"
+          [binary]="true"
+          inputId="newPatient"
+          (onChange)="onNewPatientChange()"></p-checkbox>
+        <label for="newPatient">New Patient? </label>
+      </div>
+      <div class="p-formgrid grid" *ngIf="!newPatient || selectedPatient">
+        <div class="field col-12 md:col-6 lg:col-4">
+          <label>Select Patient<span style="color: red">*</span></label>
+          <p-dropdown
+            [options]="patientList"
+            placeholder="Select Patient"
+            optionLabel="email"
+            optionValue="id"
+            [showClear]="true"
+            [filter]="true"
+            filterBy="firstName,lastName,email"
+            [(ngModel)]="selectedPatient"
+            (onChange)="updatePatientInformation($event)">
+            <ng-template pTemplate="selectedItem">
+              <div *ngIf="selectedPatient">
+                {{ patientDetails.firstName }} {{ patientDetails.lastName }}
+              </div>
+            </ng-template>
+            <ng-template let-item pTemplate="item">
+              <div>
+                <b
+                  >{{ item.firstName }} {{ item.lastName }} (
+                  {{ item.email }} )</b
+                >
+              </div>
+            </ng-template>
+          </p-dropdown>
+        </div>
+      </div>
+      <form
+        class="mt-4"
+        [formGroup]="appointmentForm"
+        autocomplete="off"
+        (submit)="save()">
+        <p-panel header="Patient Information" styleClass="mb-4">
+          <div formGroupName="patientInformation">
+            <div class="p-formgrid grid">
+              <div class="field col-12 md:col-6 lg:col-6">
+                <label htmlFor="firstName"
+                  >First Name <span style="color: red">*</span></label
+                >
+                <input
+                  pInputText
+                  id="firstName"
+                  formControlName="firstName"
+                  type="text"
+                  [ngClass]="{
+                    'ng-dirty': validateControl(
+                      'patientInformation',
+                      'firstName'
+                    )
+                  }" />
+                <small
+                  *ngIf="validateControl('patientInformation', 'firstName')"
+                  class="p-error"
+                  >First Name is required.</small
+                >
+              </div>
+              <div class="field col-12 md:col-6 lg:col-6">
+                <label htmlFor="lastName"
+                  >Last Name <span style="color: red">*</span></label
+                >
+                <input
+                  pInputText
+                  id="lastName"
+                  formControlName="lastName"
+                  type="text"
+                  [ngClass]="{
+                    'ng-dirty': validateControl(
+                      'patientInformation',
+                      'lastName'
+                    )
+                  }" />
+                <small
+                  *ngIf="validateControl('patientInformation', 'lastName')"
+                  class="p-error"
+                  >Last Name is required.</small
+                >
+              </div>
+            </div>
+            <div class="p-formgrid grid">
+              <div class="field col-12 md:col-6 lg:col-6">
+                <label htmlFor="email">Email</label>
+                <input
+                  pInputText
+                  id="email"
+                  formControlName="email"
+                  type="text"
+                  [ngClass]="{
+                    'ng-dirty': validateControl('patientInformation', 'email')
+                  }" />
+                <small
+                  *ngIf="validateControl('patientInformation', 'email')"
+                  class="p-error"
+                  >Invalid Email Format</small
+                >
+              </div>
+              <div class="field col-12 md:col-6 lg:col-6">
+                <label htmlFor="phone"
+                  >Mobile Phone <span style="color: red">*</span></label
+                >
+                <div class="p-inputgroup">
+                  <span class="p-inputgroup-addon">+63</span>
+                  <p-inputMask
+                    mask="999-999-9999"
+                    formControlName="phone"
+                    placeholder="999-999-9999"
+                    [ngClass]="{
+                      'ng-dirty': validateControl('patientInformation', 'phone')
+                    }"></p-inputMask>
+                </div>
+
+                <small
+                  *ngIf="validateControl('patientInformation', 'phone')"
+                  class="p-error"
+                  >Phone is required</small
+                >
+              </div>
+            </div>
+            <div class="p-formgrid grid">
+              <div class="field col-12 md:col-6 lg:col-6">
+                <label htmlFor="address">Full Address</label>
+                <input
+                  pInputText
+                  id="address"
+                  formControlName="address"
+                  type="text" />
+              </div>
+              <div class="field col-12 md:col-6 lg:col-6">
+                <label class="mb-2">Check status applicable</label>
+                <div class="row">
+                  <div class="field-checkbox col-12 md:col-6 lg:col-4">
+                    <p-checkbox
+                      formControlName="isPwd"
+                      [binary]="true"
+                      inputId="isPwd"
+                      (onChange)="
+                        OnCheckBoxCheck($event, 'isPwd')
+                      "></p-checkbox>
+                    <label for="isPwd">PWD</label>
+                  </div>
+                  <div class="field-checkbox col-12 md:col-6 lg:col-4">
+                    <p-checkbox
+                      formControlName="isSenior"
+                      [binary]="true"
+                      inputId="isSenior"
+                      (onChange)="
+                        OnCheckBoxCheck($event, 'isSenior')
+                      "></p-checkbox>
+                    <label for="isSenior">Senior Citizen</label>
+                  </div>
+                  <div class="field-checkbox col-12 md:col-6 lg:col-4">
+                    <p-checkbox
+                      formControlName="isPregnant"
+                      [binary]="true"
+                      inputId="isPregnant"
+                      (onChange)="
+                        OnCheckBoxCheck($event, 'isPregnant')
+                      "></p-checkbox>
+                    <label for="isPregnant">Pregnant</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="p-formgrid grid" *ngIf="enableUpload">
+              <div class="field col-12 md:col-6 lg:col-6 lg:col-offset-6">
+                <label htmlFor="medCert"
+                  >Medical Certificate <span style="color: red">*</span></label
+                >
+                <p-fileUpload
+                  #fileUpload
+                  [customUpload]="true"
+                  [showCancelButton]="false"
+                  [showUploadButton]="false"
+                  (onSelect)="uploadFile($event)"
+                  (onRemove)="onRemove()"
+                  [ngClass]="{
+                    'ng-dirty': validateControl('patientInformation', 'medCert')
+                  }"></p-fileUpload>
+                <small
+                  *ngIf="validateControl('patientInformation', 'medCert')"
+                  class="p-error"
+                  >Medical Certificate is required</small
+                >
+              </div>
+            </div>
+          </div>
+        </p-panel>
+        <p-panel header="Schedule Information" styleClass="mb-4">
+          <div formGroupName="schedule">
+            <div class="p-formgrid grid">
+              <div class="field col-12 md:col-6 lg:col-6">
+                <h5>Select Service<span style="color: red">*</span></h5>
+                <p-dropdown
+                  [options]="product"
+                  placeholder="Select Service"
+                  optionLabel="name"
+                  optionValue="id"
+                  [showClear]="true"
+                  formControlName="product"
+                  [(ngModel)]="selectedProduct"
+                  (onChange)="getDisabledDays($event)">
+                  <ng-template pTemplate="selectedItem">
+                    <div *ngIf="selectedProduct">{{ productDetails.name }}</div>
+                  </ng-template>
+                  <ng-template let-item pTemplate="item">
+                    <div>
+                      <b>{{ item.name }}</b>
+                    </div>
+                  </ng-template>
+                </p-dropdown>
+              </div>
+            </div>
+            <div class="p-formgrid grid" *ngIf="showCalendar">
+              <div class="field col mb-2">
+                <h5>Date<span style="color: red">*</span></h5>
+                <p-divider></p-divider>
+                <p-calendar
+                  [inline]="true"
+                  formControlName="appointmentDate"
+                  dataType="string"
+                  [(ngModel)]="appointmentDate"
+                  (onSelect)="resetSelectedTime()"
+                  disabledWeekends="true"
+                  [minDate]="today"
+                  [disabledDates]="invalidDates"
+                  [disabledDays]="[4]">
+                  <ng-template pTemplate="date" let-date>
+                    <span
+                      [ngClass]="{
+                        'text-danger font-semibold': isFullyBook(
+                          date.day,
+                          date.month,
+                          date.year
+                        )
+                      }"
+                      >{{ date.day }}</span
+                    >
+                  </ng-template>
+                </p-calendar>
+              </div>
+              <div class="field col">
+                <h5>Time<span style="color: red">*</span></h5>
+                <p-divider></p-divider>
+                <!-- Time  -->
+                <div
+                  *ngIf="
+                    appointmentForm.get('schedule.appointmentDate')?.value
+                  ">
+                  <div
+                    class="row"
+                    *ngFor="let time of appointmentTime; let i = index">
+                    <div class="col">
+                      <div class="field-radiobutton">
+                        <p-radioButton
+                          name="appointmentTime"
+                          [value]="time.id"
+                          [label]="time.name.split('-')[0]"
+                          formControlName="appointmentTime"
+                          [disabled]="
+                            time.availableSlot === 0 ||
+                            isTimeDisabled(time.militaryTime)
+                          ">
+                        </p-radioButton>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </p-panel>
+        <div class="grid grid-nogutter justify-content-end">
+          <p-button
+            label="Save"
+            (onClick)="save()"
+            icon="pi pi-save"
+            iconPos="right"
+            styleClass="p-button-success"
+            [disabled]="
+              appointmentForm.invalid || (!newPatient && !selectedPatient)
+            "></p-button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,81 @@
+<section class="login-section vh-100 bg-login">
+  <div class="container mt-6">
+    <div class="row justify-content-center">
+      <div class="col-md-12 col-lg-8">
+        <div class="wrap d-md-flex">
+          <div class="col-md-6 col-lg-5 order-md-first bg-login-img"></div>
+          <div class="login-wrap p-4 p-lg-5">
+            <div class="d-flex">
+              <div class="w-100">
+                <h3 class="mb-2 text-center">Sign In</h3>
+              </div>
+            </div>
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+              <div class="form-group mb-4 mt-3">
+                <label for="float-input">Username</label>
+                <input
+                  type="text"
+                  pInputText
+                  formControlName="username"
+                  class="form-control form-control-lg" />
+
+                <div class="p-inputgroup">
+                  <small
+                    class="text-danger"
+                    *ngIf="(f['username'].touched || submitted) && f['username'].errors?.['required']">
+                    Username is required
+                  </small>
+                </div>
+              </div>
+              <div class="form-group mb-3">
+                <label for="float-input">Password</label>
+                <div class="p-inputgroup">
+                  <input
+                    [type]="showPassword ? 'text' : 'password'"
+                    pInputText
+                    formControlName="password"
+                    class="form-control form-control-lg" />
+                  <button
+                    pButton
+                    type="button"
+                    (click)="showPassword = !showPassword"
+                    [icon]="showPassword ? 'pi pi-eye-slash' : 'pi pi-eye'"
+                    class="p-inputgroup-addon p-button-outlined p-button-secondary"></button>
+                </div>
+
+                <div class="p-inputgroup">
+                  <small
+                    class="text-danger"
+                    *ngIf="(f['password'].touched || submitted) && f['password'].errors?.['required']">
+                    Password is required
+                  </small>
+                </div>
+                <div *ngIf="error" class="alert alert-danger mt-2 mb-0">
+                  {{ error }}
+                </div>
+              </div>
+              <div class="form-group">
+                <button
+                  [disabled]="loading"
+                  class="btn btn-login btn btn-primary btn-block">
+                  <span
+                    *ngIf="loading"
+                    class="spinner-border spinner-border-sm mr-1"></span>
+                  LOGIN
+                </button>
+              </div>
+              <div class="text-center mt-4">
+                Don't have an account?
+                <a class="text-muted" routerLink="/register">Sign up</a>
+                <p-divider align="center">Or</p-divider>
+                Go back to
+                <a class="text-muted" routerLink="/">Home</a>
+              </div>
+              <div class="text-center mt-4"></div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

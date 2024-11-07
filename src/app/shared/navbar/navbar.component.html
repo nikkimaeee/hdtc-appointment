@@ -1,0 +1,57 @@
+<nav
+  class="navbar navbar-light navbar-expand-md fixed-top navbar-shrink py-3"
+  id="mainNav">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center" routerLink="/">
+      <span
+        class="bs-icon-sm bs-icon-circle bs-icon-primary shadow d-flex justify-content-center align-items-center me-2 bs-icon"></span>
+      <h2 class="m-0">Ocampo Dental Clinic</h2>
+    </a>
+    <button
+      data-bs-toggle="collapse"
+      class="navbar-toggler"
+      data-bs-target="#navcol-1">
+      <span class="visually-hidden">Toggle navigation</span>
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="navcol-1">
+      <ul class="navbar-nav">
+        <li class="nav-item"><a class="nav-link" routerLink="/">Home</a></li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/service-catalog">Service Offered</a>
+          <!-- list of services -->
+          <!-- DataView -->
+        </li>
+        <li class="nav-item" *ngIf="isAuthenticated">
+          <a class="nav-link" routerLink="/admin">Dashboard</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/contact_us">Contact Us</a>
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            *ngIf="!isAppointment && !isAdmin"
+            routerLink="/appointment"
+            >Make an Appointment</a
+          >
+        </li>
+        <li class="nav-item" *ngIf="!isAuthenticated">
+          <a class="nav-link" routerLink="/login">Login</a>
+        </li>
+        <li class="nav-item" *ngIf="!isAuthenticated">
+          <a class="nav-link" routerLink="/register">Sign Up</a>
+        </li>
+        <button
+          pButton
+          pRipple
+          type="button"
+          icon="pi pi-cog"
+          class="p-button-rounded p-button-text p-button-plain"
+          *ngIf="isAuthenticated"
+          (click)="menu.toggle($event)"></button>
+        <p-menu #menu [popup]="true" [model]="items"></p-menu>
+      </ul>
+    </div>
+  </div>
+</nav>

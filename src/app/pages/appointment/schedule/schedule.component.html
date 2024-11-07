@@ -1,0 +1,112 @@
+<form [formGroup]="scheduleForm">
+  <div class="stepsdemo-content">
+    <p-card>
+      <ng-template pTemplate="title"> Schedule </ng-template>
+      <ng-template pTemplate="content">
+        <div class="grid">
+          <div class="col-12 md:col-12 lg:col-12">
+            <h5>Select Service:<span style="color: red">*</span></h5>
+          </div>
+          <div class="field col-12 md:col-12 lg:col-6">
+            <p-dropdown
+              [options]="product"
+              placeholder="Select Service"
+              optionLabel="name"
+              optionValue="id"
+              [showClear]="true"
+              formControlName="product"
+              [(ngModel)]="selectedProduct"
+              (onChange)="getDisabledDays($event)">
+              <ng-template pTemplate="selectedItem">
+                <div *ngIf="selectedProduct">{{ productDetails.name }}</div>
+              </ng-template>
+              <ng-template let-item pTemplate="item">
+                <div>
+                  <b>{{ item.name }}</b>
+                </div>
+              </ng-template>
+            </p-dropdown>
+          </div>
+        </div>
+        <div class="grid" *ngIf="selectedProduct">
+          <div class="p-fluid col-12 md:col-12 lg:col-12">
+            <div class="field">
+              <p-card>
+                <h5>Service Offered:</h5>
+                {{ productDetails?.description }} <br />
+                <h5 class="mt-4">Duration:</h5>
+                {{ productDetails?.duration }} hr(s) <br />
+                <h5 class="mt-4">Price:</h5>
+                {{ productDetails?.price | currency : 'PHP' : 'symbol' }}
+              </p-card>
+            </div>
+          </div>
+        </div>
+        <div class="grid" *ngIf="showCalendar">
+          <div class="field col-12 md:col-12 lg:col-6">
+            <h5>Date<span style="color: red">*</span></h5>
+            <p-divider></p-divider>
+            <p-calendar
+              [inline]="true"
+              formControlName="appointmentDate"
+              dataType="string"
+              [(ngModel)]="appointmentDate"
+              (onSelect)="resetSelectedTime()"
+              disabledWeekends="true"
+              [minDate]="today"
+              [disabledDates]="invalidDates"
+              [disabledDays]="[4]">
+              <ng-template pTemplate="date" let-date>
+                <span
+                  [ngClass]="{
+                    'text-danger font-semibold': isFullyBook(
+                      date.day,
+                      date.month,
+                      date.year
+                    )
+                  }"
+                  >{{ date.day }}</span
+                >
+              </ng-template>
+            </p-calendar>
+          </div>
+          <div class="field col-12 md:col-12 lg:col-6">
+            <h5>Time<span style="color: red">*</span></h5>
+            <p-divider></p-divider>
+            <!-- Time  -->
+            <div *ngIf="scheduleForm.get('appointmentDate')?.value">
+              <div
+                class="row"
+                *ngFor="let time of appointmentTime; let i = index">
+                <div class="col">
+                  <div class="field-radiobutton">
+                    <p-radioButton
+                      name="appointmentTime"
+                      [value]="time.id"
+                      [label]="time.name.split('-')[0]"
+                      formControlName="appointmentTime"
+                      [disabled]="
+                        time.availableSlot === 0 ||
+                        isTimeDisabled(time.militaryTime)
+                      ">
+                    </p-radioButton>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="footer">
+        <div class="grid grid-nogutter justify-content-end">
+          <p-button
+            label="Next"
+            (onClick)="nextPage()"
+            icon="pi pi-angle-right"
+            iconPos="right"
+            [disabled]="scheduleForm.invalid"></p-button>
+        </div>
+      </ng-template>
+    </p-card>
+  </div>
+</form>

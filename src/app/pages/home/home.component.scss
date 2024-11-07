@@ -1,0 +1,133 @@
+.hero-slant h1 {
+  font-size: 3.5rem;
+  font-family: 'Montserrat', sans-serif !important;
+}
+.hero-slant p {
+  font-family: 'Montserrat', sans-serif !important;
+  font-size: 1rem;
+}
+.hero-slant {
+  font-family: 'Raleway', sans-serif;
+  background-color: #ccc;
+  position: relative;
+  background-size: cover;
+}
+.hero-slant.overlay {
+  position: relative;
+}
+.hero-slant.overlay:before {
+  position: absolute;
+  content: '';
+  left: 0;
+  bottom: 0;
+  right: 0;
+  top: 0;
+  background: rgba(0, 0, 0, 0.2);
+}
+.hero-slant .container {
+  position: relative;
+}
+.hero-slant,
+.hero-slant > .container > .row {
+  height: 120vh;
+}
+.hero-slant .intro {
+  position: relative;
+  z-index: 2;
+  max-width: 510px;
+}
+.hero-slant .hero_img {
+  position: absolute;
+  right: 0;
+  z-index: 9;
+  bottom: 100px;
+}
+@media (max-width: 991.98px) {
+  .hero-slant .hero_img {
+    position: relative;
+    margin-top: -200px;
+    bottom: -100px;
+    margin-bottom: 140px;
+  }
+}
+.hero-slant .slant {
+  position: absolute;
+  width: calc(100% + 2px);
+  height: 380px;
+  bottom: -2px;
+  left: -2px;
+  z-index: 1;
+  background-size: cover;
+  background-position: left top;
+  background-repeat: no-repeat;
+}
+
+.appointment-btn {
+  font-family: 'Raleway', sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  display: inline-block;
+  transition: 0.3s;
+  color: #000;
+  background: #fff;
+  position: relative;
+}
+.appointment-btn:hover {
+  background: #767171;
+  color: #fff;
+  font-weight: 700;
+}
+.animate__animated.animate__fadeIn {
+  --animate-delay: 0.5s;
+}
+
+.text-primary {
+  color: #767171 !important;
+}
+.text-secondary {
+  color: #999999 !important;
+  font-size: 1.25rem !important;
+}
+.fs-5 {
+  font-size: 1.5rem !important;
+}
+.ps-4 {
+  padding-left: 1.5rem !important;
+}
+//about
+.about {
+  font-size: 1.5rem !important;
+  font-weight: 600;
+  color: #000 !important;
+}
+@media (max-width: 993px) {
+  #about img {
+    display: none;
+  }
+}
+// whyUs
+.whyUs {
+  font-size: 1.5rem !important;
+  font-weight: 600;
+  color: #767171 !important;
+}
+#whyUs p {
+  color: #999999 !important;
+}
+
+// contact section
+.btn {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  padding-left: 30px;
+  padding-right: 30px;
+  border-radius: 4px;
+  font-size: 1.5rem;
+  font-weight: 600;
+  background-color: #767171;
+  color: #000;
+}
+.facts {
+  background: linear-gradient(rgba(115, 115, 116, 0.95), rgba(73, 73, 73, 0.95)),
+    url(../../../assets/img/bg.png) !important;
+}

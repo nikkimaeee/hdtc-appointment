@@ -1,0 +1,341 @@
+<div class="grid">
+  <div class="col-12">
+    <div class="card border-0 rounded-lg">
+      <div class="card-header justify-content-center bg-white border-0">
+        <h3 class="my-2">{{ pageTitle }}</h3>
+      </div>
+    </div>
+    <div class="p-fluid formgrid grid card border-0 rounded-lg">
+      <!-- appointment details -->
+      <p-dialog
+        header="Appointment Details"
+        [(visible)]="display"
+        [modal]="true"
+        [style]="{ width: '50vw' }"
+        [draggable]="false"
+        [resizable]="false">
+        <p class="m-1">
+          <b>Reference #:</b> {{ selectedAppointment.referenceNumber }}
+        </p>
+        <p class="m-1">
+          <b>Transaction #:</b> {{ selectedAppointment.transactionId }}
+        </p>
+        <p class="m-1">
+          <b>Service Availed:</b> {{ selectedAppointment.product?.name }}
+        </p>
+        <p class="m-1">
+          <b>Appointment Date:</b>
+          {{ selectedAppointment.appointmentDate | date : 'dd/MM/yyyy' }}
+          {{ selectedAppointment.appointmentTimeLabel }}
+        </p>
+        <p
+          class="m-1"
+          *ngIf="
+            selectedAppointment.medCert &&
+            selectedAppointment.medCert !== undefined
+          ">
+          <b>Medical Certificate:</b>
+        </p>
+        <p
+          *ngIf="
+            selectedAppointment.medCert &&
+            selectedAppointment.medCert !== undefined
+          ">
+          <img
+            [src]="'data:image/jpg;base64,' + selectedAppointment.medCert"
+            [alt]="selectedAppointment.name"
+            width="100"
+            class="shadow-4" />
+        </p>
+        <ng-template pTemplate="footer">
+          <p-button
+            icon="pi pi-check"
+            (click)="display = false"
+            label="Ok"
+            styleClass="p-button-text"></p-button>
+        </ng-template>
+      </p-dialog>
+      <!-- reschedule modal -->
+      <p-dialog
+        header="Reschedule Appointment"
+        [(visible)]="showCalendar"
+        [modal]="true"
+        [style]="{ width: '50vw' }"
+        [draggable]="false"
+        [resizable]="false">
+        <div class="p-formgrid grid mt-2">
+          <div class="field col-12 md:col-6 lg:col-6 mb-2">
+            <h5>Date<span style="color: red">*</span></h5>
+            <p-divider></p-divider>
+            <p-calendar
+              [inline]="true"
+              dataType="string"
+              [(ngModel)]="appointmentDate"
+              (onSelect)="resetSelectedTime()"
+              disabledWeekends="true"
+              [minDate]="today"
+              [disabledDates]="invalidDates"
+              [disabledDays]="[4]">
+              <ng-template pTemplate="date" let-date>
+                <span
+                  [ngClass]="{
+                    'text-danger font-semibold': isFullyBook(
+                      date.day,
+                      date.month,
+                      date.year
+                    )
+                  }"
+                  >{{ date.day }}</span
+                >
+              </ng-template>
+            </p-calendar>
+          </div>
+          <div class="field col-12 md:col-6 lg:col-6">
+            <h5>Time<span style="color: red">*</span></h5>
+            <p-divider></p-divider>
+            <!-- Time  -->
+            <div *ngIf="appointmentDate">
+              <div
+                class="row"
+                *ngFor="let time of appointmentTime; let i = index">
+                <div class="col">
+                  <div class="field-radiobutton">
+                    <p-radioButton
+                      name="appointmentTime"
+                      [value]="time.id"
+                      [label]="time.name.split('-')[0]"
+                      [(ngModel)]="selectedTime"
+                      [disabled]="
+                        time.availableSlot === 0 ||
+                        isTimeDisabled(time.militaryTime)
+                      ">
+                    </p-radioButton>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <ng-template pTemplate="footer">
+          <p-button
+            icon="pi pi-check"
+            (click)="confirmResched()"
+            label="Ok"
+            styleClass="p-button-text"
+            [disabled]="!selectedTime || !appointmentDate"></p-button>
+          <p-button
+            icon="pi pi-times"
+            (click)="showCalendar = false"
+            label="Cancel"
+            styleClass="p-button-text"></p-button>
+        </ng-template>
+      </p-dialog>
+      <!-- Mark as done modal-->
+      <p-dialog
+        header="Add Attachments and Presciptions"
+        [(visible)]="displayConfirmDone"
+        [modal]="true"
+        [style]="{ width: '50vw' }"
+        [draggable]="false"
+        [resizable]="false">
+        <div class="row">
+          <div class="col-12">
+            <h6>Add Attachment (optional)</h6>
+            <p-fileUpload
+              #fileUpload
+              name="myfile[]"
+              [customUpload]="true"
+              [showCancelButton]="false"
+              [showUploadButton]="false"
+              [multiple]="true"
+              (onSelect)="uploadFile($event)"
+              (onRemove)="uploadFile($event)"></p-fileUpload>
+          </div>
+          <div class="col-12 mt-1">
+            <h6 class="mt-6">Prescription Details(optional)</h6>
+            <textarea
+              rows="5"
+              cols="30"
+              pInputTextarea
+              [autoResize]="true"
+              [(ngModel)]="prescription"></textarea>
+          </div>
+        </div>
+        <ng-template pTemplate="footer">
+          <p-button
+            icon="pi pi-check"
+            (click)="confirmDone()"
+            label="Ok"
+            styleClass="p-button-text"></p-button>
+          <p-button
+            icon="pi pi-times"
+            (click)="displayConfirmDone = false"
+            label="Cancel"
+            styleClass="p-button-text"></p-button>
+        </ng-template>
+      </p-dialog>
+      <p-toolbar styleClass="mb-4">
+        <ng-template pTemplate="left">
+          <div class="grid">
+            <div class="field col-12 md:col-6 lg:col-3 dashboard">
+              <input
+                pInputText
+                type="text"
+                [(ngModel)]="filter"
+                placeholder="Search keyword" />
+            </div>
+            <div class="field col-12 md:col-6 lg:col-3 dashboard">
+              <p-calendar
+                [(ngModel)]="rangeDates"
+                selectionMode="range"
+                [readonlyInput]="true"
+                inputId="range"
+                [showIcon]="true"></p-calendar>
+            </div>
+            <div class="field col-12 md:col-6 lg:col-3 dashboard">
+              <p-dropdown
+                [options]="status"
+                [(ngModel)]="selectedStatus"></p-dropdown>
+            </div>
+            <div class="field col-12 md:col-6 lg:col-3 dashboard">
+              <p-button
+                label="Apply Filter"
+                icon="pi pi-search"
+                (onClick)="applyFilter()"></p-button>
+            </div>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="right">
+          <button
+            pButton
+            pRipple
+            label="New"
+            icon="pi pi-plus"
+            class="p-button-info"
+            (click)="addNew()"
+            *ngIf="isAdmin"></button>
+          <a
+            pButton
+            pRipple
+            label="Make Appointment"
+            class="p-button-info"
+            *ngIf="!isAdmin"
+            routerLink="/appointment"></a>
+        </ng-template>
+      </p-toolbar>
+      <p-table
+        #dt1
+        [lazy]="true"
+        (onLazyLoad)="loadData($event)"
+        [loading]="isLoading"
+        [value]="appointmentList"
+        [rows]="10"
+        [paginator]="true"
+        [totalRecords]="totalRecords"
+        [rowsPerPageOptions]="[10, 25, 50]">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Transaction Id</th>
+            <th>Full Name</th>
+            <th *ngIf="isAdmin">Email</th>
+            <th>Service Availed</th>
+            <th>Appointment Schedule</th>
+            <th>Appointment Type</th>
+            <th>Payment Type</th>
+            <th>Payment Status</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-appointment>
+          <tr>
+            <td>{{ appointment.transactionId }}</td>
+            <td>
+              {{ appointment.patientInformation?.firstName }}
+              {{ appointment.patientInformation?.lastName }}
+            </td>
+            <td *ngIf="isAdmin">{{ appointment.patientInformation?.email }}</td>
+            <td>{{ appointment.product?.name ?? '-' }}</td>
+            <td>
+              {{ appointment.appointmentDate | date : 'MMM dd, yyyy' }}
+              {{ appointment.appointmentTimeLabel }}
+            </td>
+            <td>{{ appointment.isWalkIn ? 'Walk-in' : 'Online' }}</td>
+            <td>{{ appointment.paymentMethod === 1 ? 'Paypal' : 'Cash' }}</td>
+            <td>
+              {{
+                appointment.status == 'Cancelled'
+                  ? 'Refunded'
+                  : appointment.isPaid
+                  ? 'Paid'
+                  : 'Unpaid'
+              }}
+            </td>
+            <td>{{ appointment.status }}</td>
+            <td>
+              <button
+                title="View Details"
+                pButton
+                pRipple
+                icon="pi pi-eye"
+                class="p-button-rounded p-button-text p-button-secondary"
+                (click)="showDetails(appointment)"></button>
+              <button
+                *ngIf="isAdmin && appointment.status === 'Pending'"
+                title="Mark as Approved"
+                pButton
+                pRipple
+                icon="pi pi-check"
+                class="p-button-rounded p-button-text p-button-secondary"
+                (click)="approveAppointment(appointment)"></button>
+              <button
+                *ngIf="
+                  isAdmin &&
+                  appointment.status === 'Approved' &&
+                  canSetDone(appointment.appointmentDate)
+                "
+                title="Mark as Done"
+                pButton
+                pRipple
+                icon="pi pi-check"
+                class="p-button-rounded p-button-text p-button-secondary"
+                (click)="done(appointment)"></button>
+              <button
+                *ngIf="appointment.status === 'Pending'"
+                title="Reschedule"
+                pButton
+                pRipple
+                icon="pi pi-calendar"
+                class="p-button-rounded p-button-text p-button-secondary"
+                (click)="reschedule(appointment)"></button>
+              <button
+                *ngIf="
+                  isAdmin &&
+                  appointment.paymentMethod === 1 &&
+                  appointment.status === 'Pending'
+                "
+                title="Issue Refund"
+                pButton
+                pRipple
+                icon="pi pi-wallet"
+                class="p-button-rounded p-button-text p-button-secondary"
+                (click)="issueRefund(appointment, 'refund')"></button>
+              <button
+                *ngIf="
+                  isAdmin &&
+                  appointment.paymentMethod !== 1 &&
+                  appointment.status === 'Pending'
+                "
+                title="Cancel Appointment"
+                pButton
+                pRipple
+                icon="pi pi-times"
+                class="p-button-rounded p-button-text p-button-secondary"
+                (click)="issueRefund(appointment, 'cancel')"></button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</div>

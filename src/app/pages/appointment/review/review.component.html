@@ -1,0 +1,160 @@
+<div class="stepsdemo-content mt-4">
+  <p-card>
+    <ng-template pTemplate="title"> Review </ng-template>
+    <ng-template pTemplate="subtitle"> Reviewing Details </ng-template>
+    <ng-template pTemplate="content">
+      <div class="p-fluid formgrid grid my-2">
+        <div class="field col-12 md:col-12 lg:col-6">
+          <p-panel
+            header="Schedule Information"
+            [toggleable]="true"
+            class="w-100">
+            <div class="p-fluid formgrid grid">
+              <div class="field col-12">
+                <label for="embassy"> Service</label>
+                <div class="text-lg">{{ product?.name }}</div>
+              </div>
+              <div class="field col-12">
+                <label for="embassy"> Description</label>
+                <div class="text-lg">{{ product?.description }}</div>
+              </div>
+              <div class="field col-12 md:col-12 lg:col-4">
+                <label for="visaType">Appointment Date</label>
+                <div class="text-lg">
+                  {{ scheduleInformation.appointmentDate | date }}
+                </div>
+              </div>
+              <div class="field col-12 md:col-12 lg:col-4">
+                <label for="visaCategory">Appointment Time</label>
+                <div class="text-lg">
+                  {{ getTimeSlot }}
+                </div>
+              </div>
+
+              <div class="field col-12 md:col-12 lg:col-4">
+                <label for="visaCategory">Price</label>
+                <div class="text-lg">
+                  {{ scheduleInformation.price | currency : 'PHP' : 'symbol' }}
+                </div>
+              </div>
+            </div>
+          </p-panel>
+        </div>
+        <div class="field col-12 md:col-12 lg:col-6">
+          <p-panel
+            header="Personal Information"
+            [toggleable]="true"
+            class="w-100">
+            <div class="p-fluid formgrid grid">
+              <div class="field col-12 md:col-4">
+                <label for="embassy"> Full Name</label>
+                <div class="text-lg">
+                  {{ personalInformation.firstName }}
+                  {{ personalInformation.lastName }}
+                </div>
+              </div>
+              <div class="field col-12">
+                <label for="embassy"> Email</label>
+                <div class="text-lg">{{ personalInformation.email }}</div>
+              </div>
+              <div class="field col-12">
+                <label for="visaType">Phone</label>
+                <div class="text-lg">
+                  {{ personalInformation.phone }}
+                </div>
+              </div>
+              <div class="field col-12">
+                <label for="visaCategory">Address</label>
+                <div class="text-lg">
+                  {{ personalInformation.address ?? '-' }}
+                </div>
+              </div>
+              <div class="field col-12">
+                <label class="mb-2">Check status applicable</label>
+                <div class="row">
+                  <div class="field-checkbox col-12 md:col-12 lg:col-4">
+                    <p-checkbox
+                      [(ngModel)]="isPwd"
+                      [binary]="true"
+                      inputId="isPwd"
+                      (onChange)="
+                        OnCheckBoxCheck($event, 'isPwd')
+                      "></p-checkbox>
+                    <label for="isPwd">PWD</label>
+                  </div>
+                  <div class="field-checkbox col-12 md:col-12 lg:col-4">
+                    <p-checkbox
+                      [(ngModel)]="isSenior"
+                      [binary]="true"
+                      inputId="isSenior"
+                      (onChange)="
+                        OnCheckBoxCheck($event, 'isSenior')
+                      "></p-checkbox>
+                    <label for="isSenior">Senior Citizen</label>
+                  </div>
+                  <div class="field-checkbox col-12 md:col-12 lg:col-4">
+                    <p-checkbox
+                      [(ngModel)]="isPregnant"
+                      [binary]="true"
+                      inputId="isPregnant"
+                      (onChange)="
+                        OnCheckBoxCheck($event, 'isPregnant')
+                      "></p-checkbox>
+                    <label for="isPregnant">Pregnant</label>
+                  </div>
+                </div>
+              </div>
+              <div class="field col-12" *ngIf="isPwd || isPregnant || isSenior">
+                <label htmlFor="medCert"
+                  >Medical Certificate <span style="color: red">*</span></label
+                >
+                <p-fileUpload
+                  #fileUpload
+                  [customUpload]="true"
+                  [showCancelButton]="false"
+                  [showUploadButton]="false"
+                  (onSelect)="uploadFile($event)"
+                  (onRemove)="onRemove()"
+                  [ngClass]="{
+                    'ng-dirty':
+                      (isPwd || isPregnant || isSenior) &&
+                      !reviewForm.personalInformation.medCert
+                  }"></p-fileUpload>
+                <small
+                  *ngIf="
+                    (isPwd || isPregnant || isSenior) &&
+                    !reviewForm.personalInformation.medCert
+                  "
+                  class="p-error"
+                  >Medical Certificate is required</small
+                >
+              </div>
+            </div>
+          </p-panel>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="footer">
+      <div class="grid grid-nogutter justify-content-end">
+        <p-button
+          label="Back"
+          (onClick)="back()"
+          icon="pi pi-angle-left"
+          styleClass="p-button-danger"
+          class="mr-2">
+        </p-button>
+        <p-button
+          label="Proceed To Payment"
+          (onClick)="nextPage()"
+          icon="pi pi-save"
+          iconPos="right"
+          styleClass="p-button-success"
+          [disabled]="
+            (isPwd || isPregnant || isSenior) &&
+            !reviewForm.personalInformation.medCert
+          ">
+        </p-button>
+      </div>
+    </ng-template>
+  </p-card>
+</div>

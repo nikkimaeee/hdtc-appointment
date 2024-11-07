@@ -1,0 +1,218 @@
+<section class="login-section vh-100 bg-login">
+  <div class="container mt-6">
+    <div class="row justify-content-center">
+      <div class="col-md-12 col-lg-12">
+        <div class="wrap d-md-flex justify-content-center">
+          <div class="login-wrap p-4 p-lg-5">
+            <div class="d-flex">
+              <div class="w-100">
+                <h3 class="mb-2 text-center">Sign Up</h3>
+              </div>
+            </div>
+            <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+              <div class="form-group mb-4 mt-3 row">
+                <div class="col-md-12 col-lg-6">
+                  <label for="float-input">First Name</label>
+                  <input
+                    type="text"
+                    pInputText
+                    formControlName="firstname"
+                    class="form-control form-control-lg" />
+
+                  <div class="p-inputgroup">
+                    <small
+                      class="text-danger"
+                      *ngIf="validateControl('firstname')">
+                      FirstName is required
+                    </small>
+                  </div>
+                </div>
+                <div class="col-md-12 col-lg-6">
+                  <label for="float-input">Last Name</label>
+                  <input
+                    type="text"
+                    pInputText
+                    formControlName="lastname"
+                    class="form-control form-control-lg" />
+
+                  <div class="p-inputgroup">
+                    <small
+                      class="text-danger"
+                      *ngIf="(f['lastname'].touched || submitted) && f['lastname'].errors?.['required']">
+                      LastName is required
+                    </small>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group mb-4 mt-3 row">
+                <div class="col-md-12 col-lg-6">
+                  <label for="float-input">Email</label>
+                  <input
+                    type="text"
+                    pInputText
+                    formControlName="email"
+                    class="form-control form-control-lg" />
+
+                  <div class="p-inputgroup">
+                    <small
+                      class="text-danger"
+                      *ngIf="(f['email'].touched || submitted) && f['email'].errors?.['required']">
+                      Email is required
+                    </small>
+                  </div>
+                </div>
+                <div class="col-md-12 col-lg-6">
+                  <label for="float-input">Mobile Number</label>
+                  <div class="p-inputgroup">
+                    <span class="p-inputgroup-addon">+63</span>
+                    <p-inputMask
+                      mask="999-999-9999"
+                      formControlName="phone"
+                      placeholder="999-999-9999"
+                      styleClass="form-control form-control-lg registration"></p-inputMask>
+                  </div>
+                  <!-- <input
+                    type="text"
+                    pInputMask
+                    formControlName="phone"
+                    class="form-control form-control-lg" /> -->
+
+                  <div class="p-inputgroup">
+                    <small
+                      class="text-danger"
+                      *ngIf="(f['phone'].touched || submitted) && f['phone'].errors?.['required']">
+                      Mobile Number is required
+                    </small>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group mb-3 row">
+                <div class="col-md-12 col-lg-6">
+                  <label for="float-input">Password</label>
+                  <div class="p-inputgroup">
+                    <input
+                      [type]="showPassword ? 'text' : 'password'"
+                      pPassword
+                      formControlName="password"
+                      class="form-control form-control-lg"
+                      (blur)="validatePassword()"
+                      [feedback]="false" />
+                    <button
+                      pButton
+                      type="button"
+                      (click)="showPassword = !showPassword"
+                      [icon]="showPassword ? 'pi pi-eye-slash' : 'pi pi-eye'"
+                      class="p-inputgroup-addon p-button-outlined p-button-secondary"></button>
+                  </div>
+
+                  <div class="p-inputgroup text-danger">
+                    <small *ngIf="validateControl('password')" class="p-error"
+                      ><span
+                        *ngIf="registerForm.get('password')?.errors?.['required']"
+                        >Password is Required.</span
+                      >
+                      <span
+                        *ngIf="registerForm.get('password')?.errors?.['pattern']"
+                        >Password must contain:
+                        <ul>
+                          <li>At least one lowercase</li>
+                          <li>At least one uppercase</li>
+                          <li>At least one numeric</li>
+                          <li>At least one special character</li>
+                          <li>Minimum 8 characters</li>
+                        </ul>
+                      </span>
+                    </small>
+                  </div>
+                </div>
+                <div class="col-md-12 col-lg-6">
+                  <label for="float-input">Confirm Password</label>
+                  <div class="p-inputgroup">
+                    <input
+                      [type]="showConfirmPassword ? 'text' : 'password'"
+                      pPassword
+                      formControlName="confirmPassword"
+                      class="form-control form-control-lg"
+                      (blur)="validatePassword()"
+                      [feedback]="false" />
+                    <button
+                      pButton
+                      type="button"
+                      (click)="showConfirmPassword = !showConfirmPassword"
+                      [icon]="
+                        showConfirmPassword ? 'pi pi-eye-slash' : 'pi pi-eye'
+                      "
+                      class="p-inputgroup-addon p-button-outlined p-button-secondary"></button>
+                  </div>
+
+                  <div class="p-inputgroup text-danger">
+                    <small
+                      *ngIf="validateControl('confirmPassword')"
+                      class="p-error"
+                      ><span
+                        *ngIf="registerForm.get('confirmPassword')?.errors?.['required']"
+                        >Confirm Password is Required.</span
+                      >
+                      <span
+                        *ngIf="registerForm.get('confirmPassword')?.errors?.['confirmPasswordValidator']"
+                        >Passsword and Confirm Password didn't match.</span
+                      >
+                    </small>
+                  </div>
+                </div>
+                <div *ngIf="error" class="alert alert-danger mt-2 mb-0">
+                  {{ error }}
+                </div>
+              </div>
+              <div class="form-group mb-3 row">
+                <div class="col-md-12 col-lg-12">
+                  <label class="mb-2">Check all status applicable</label>
+                  <div class="row">
+                    <div class="field-checkbox col-md-12 col-lg-4">
+                      <p-checkbox
+                        formControlName="isPwd"
+                        [binary]="true"
+                        inputId="isPwd"></p-checkbox>
+                      <label for="isPwd">PWD</label>
+                    </div>
+                    <div class="field-checkbox col-md-12 col-lg-4">
+                      <p-checkbox
+                        formControlName="isSenior"
+                        [binary]="true"
+                        inputId="isSenior"></p-checkbox>
+                      <label for="isSenior">Senior Citizen</label>
+                    </div>
+                    <div class="field-checkbox col-md-12 col-lg-4">
+                      <p-checkbox
+                        formControlName="isPregnant"
+                        [binary]="true"
+                        inputId="isPregnant"></p-checkbox>
+                      <label for="isPregnant">Pregnant</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <button
+                  [disabled]="loading || !registerForm.valid"
+                  class="btn btn-login btn btn-primary btn-block">
+                  <span
+                    *ngIf="loading"
+                    class="spinner-border spinner-border-sm mr-1"></span>
+                  Sign Up
+                </button>
+              </div>
+              <div class="text-center mt-4">
+                Already have an account?
+                <a class="text-muted" href="login">Sign in</a>
+                <p-divider align="center">Or</p-divider>
+                Go back to
+                <a class="text-muted" routerLink="/">Home</a>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
