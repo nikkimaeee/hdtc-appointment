@@ -216,6 +216,7 @@ export class DashboardComponent implements OnInit {
     if (this.salesReportPassword === 'password') {
       this.isPasswordAccepted = true;
       this.salesReportPassword = '';
+      this.showPassword = false;
       localStorage.setItem(
         'isPasswordAccepted',
         JSON.stringify(this.isPasswordAccepted)
