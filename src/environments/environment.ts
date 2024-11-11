@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'https://localhost:7230',
+  apiUrl: 'https://localhost:44338',
   paypalClientId:
     'AbVmGA_fjKljsJThJxu6rl1IVZSaa1nw4t6S8UyEtHozmH-ePQSccRdpeCfKLYIcbMZ_ijCceeYrUsNl',
   paypalApi: 'https://api-m.sandbox.paypal.com/',

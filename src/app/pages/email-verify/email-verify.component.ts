@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HttpService } from 'src/services/http.service';
 
 @Component({
-  selector: 'app-verify',
+  selector: 'app-email-verify',
   templateUrl: './email-verify.component.html',
   styleUrls: ['./email-verify.component.scss'],
 })
@@ -27,8 +27,6 @@ export class EmailVerifyComponent implements OnInit {
     if (!this.id || !this.token) {
       this.router.navigate(['/error']);
     }
-
-    console.log(this.token);
 
     let payload = {
       userId: this.id,

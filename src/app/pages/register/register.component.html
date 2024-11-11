@@ -118,7 +118,6 @@
                           <li>At least one lowercase</li>
                           <li>At least one uppercase</li>
                           <li>At least one numeric</li>
-                          <li>At least one special character</li>
                           <li>Minimum 8 characters</li>
                         </ul>
                       </span>
@@ -162,34 +161,6 @@
                 </div>
                 <div *ngIf="error" class="alert alert-danger mt-2 mb-0">
                   {{ error }}
-                </div>
-              </div>
-              <div class="form-group mb-3 row">
-                <div class="col-md-12 col-lg-12">
-                  <label class="mb-2">Check all status applicable</label>
-                  <div class="row">
-                    <div class="field-checkbox col-md-12 col-lg-4">
-                      <p-checkbox
-                        formControlName="isPwd"
-                        [binary]="true"
-                        inputId="isPwd"></p-checkbox>
-                      <label for="isPwd">PWD</label>
-                    </div>
-                    <div class="field-checkbox col-md-12 col-lg-4">
-                      <p-checkbox
-                        formControlName="isSenior"
-                        [binary]="true"
-                        inputId="isSenior"></p-checkbox>
-                      <label for="isSenior">Senior Citizen</label>
-                    </div>
-                    <div class="field-checkbox col-md-12 col-lg-4">
-                      <p-checkbox
-                        formControlName="isPregnant"
-                        [binary]="true"
-                        inputId="isPregnant"></p-checkbox>
-                      <label for="isPregnant">Pregnant</label>
-                    </div>
-                  </div>
                 </div>
               </div>
               <div class="form-group">

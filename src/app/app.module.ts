@@ -90,6 +90,7 @@ export function tokenGetter() {
           'localhost:44370',
           'hdc-api.runasp.net',
           'localhost:7230',
+          'localhost:44338',
         ],
         disallowedRoutes: [],
       },
