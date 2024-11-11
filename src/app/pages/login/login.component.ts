@@ -11,6 +11,7 @@ import { faUser } from '@fortawesome/free-solid-svg-icons';
 
 import { AuthenticationService } from '@core/auth';
 import { MessageService } from 'primeng/api';
+import { HttpService } from 'src/services/http.service';
 
 @Component({
   templateUrl: 'login.component.html',
@@ -23,13 +24,17 @@ export class LoginComponent implements OnInit {
   error: string | undefined;
   faUser = faUser;
   showPassword: boolean = false;
+  isVerified = true;
+  isSubmitted = false;
+  email: string = '';
 
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private authenticationService: AuthenticationService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private httpSvc: HttpService
   ) {
     // redirect to home if already logged in
     if (this.authenticationService.currentUserValue) {
@@ -55,6 +60,7 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
     this.submitted = true;
+    this.isSubmitted = true;
 
     // stop here if form is invalid
     if (this.loginForm.invalid) {
@@ -71,13 +77,19 @@ export class LoginComponent implements OnInit {
       .pipe(first())
       .subscribe({
         next: data => {
-          // get return url from route parameters or default to '/'
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Logged In',
-            detail: `Welcome ${data.firstName} ${data.lastName}`,
-          });
-          this.router.navigate(['admin']);
+          if (!data.isVerified) {
+            this.isVerified = false;
+            this.email = data.username;
+            this.authenticationService.logout();
+          } else {
+            // get return url from route parameters or default to '/'
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Logged In',
+              detail: `Welcome ${data.firstName} ${data.lastName}`,
+            });
+            this.router.navigate(['admin']);
+          }
         },
         error: error => {
           this.error =
@@ -87,5 +99,27 @@ export class LoginComponent implements OnInit {
           this.loading = false;
         },
       });
+  }
+
+  resend() {
+    let payload = {
+      email: this.email,
+    };
+    this.httpSvc.post('Authenticate/Resend', payload).subscribe(response => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Email Verification',
+        detail: `Email Verification Sent`,
+      });
+      this.router.navigate(['login']);
+    });
+  }
+
+  resetForm() {
+    this.loginForm.reset();
+    this.isSubmitted = false;
+    this.isVerified = true;
+    this.submitted = false;
+    this.loading = false;
   }
 }

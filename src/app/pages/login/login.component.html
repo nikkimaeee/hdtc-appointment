@@ -1,4 +1,6 @@
-<section class="login-section vh-100 bg-login">
+<section
+  class="login-section vh-100 bg-login"
+  *ngIf="isVerified && !isSubmitted">
   <div class="container mt-6">
     <div class="row justify-content-center">
       <div class="col-md-12 col-lg-8">
@@ -73,6 +75,46 @@
               </div>
               <div class="text-center mt-4"></div>
             </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section
+  class="login-section vh-100 bg-login"
+  *ngIf="!isVerified && isSubmitted">
+  <div class="container mt-6">
+    <div class="row justify-content-center">
+      <div class="col-md-12 col-lg-8">
+        <div class="bg-white border-round-2xl d-md-flex p-6 wrap">
+          <div class="col-12">
+            <div class="grid flex-column align-items-center">
+              <span class="text-blue-500 font-bold text-3xl"></span>
+              <h1 class="text-900 font-bold text-3xl lg:text-5xl mb-2">
+                Verify your Email Address
+              </h1>
+              <span class="text-600 text-center"
+                >Please verify your Email to complete login.<br />
+                Didn't Get the Email? <br /><button
+                  pButton
+                  pRipple
+                  type="button"
+                  label="Resend Verification Email"
+                  class="p-button-text"
+                  (click)="resend()"></button>
+              </span>
+
+              <div class="col-12 mt-5 text-center">
+                <i
+                  class="pi pi-fw pi-arrow-left text-blue-500 mr-2"
+                  style="vertical-align: center"></i
+                ><a (click)="resetForm()" class="text-blue-500 cursor-pointer"
+                  >Go to Login</a
+                >
+              </div>
+            </div>
           </div>
         </div>
       </div>
