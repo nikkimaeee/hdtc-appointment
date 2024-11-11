@@ -18,8 +18,6 @@
   width: 100%;
   height: auto;
 
-  /* Set up positioning */
-  position: fixed;
   top: 0;
   left: 0;
 }
@@ -44,9 +42,17 @@ input[type='button'].btn-block {
   width: 100%;
 }
 
-.login-section {
-  padding: 10.25em 0;
+
+@media (min-width: 992px) {
+  .login-section {
+    padding: 10.25em 0;
+  }
+
+  .vh-lg-100 {
+    height: 100vh !important;
+  }
 }
+
 .wrap {
   width: 100%;
 }
