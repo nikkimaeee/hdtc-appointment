@@ -301,7 +301,7 @@
                 class="p-button-rounded p-button-text p-button-secondary"
                 (click)="done(appointment)"></button>
               <button
-                *ngIf="appointment.status === 'Pending'"
+                *ngIf="appointment.status === 'Pending' || appointment.status === 'Approved'"
                 title="Reschedule"
                 pButton
                 pRipple
