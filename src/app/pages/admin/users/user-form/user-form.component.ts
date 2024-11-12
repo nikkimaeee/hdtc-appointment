@@ -42,9 +42,7 @@ export class UserFormComponent implements OnInit {
         '',
         [
           Validators.required,
-          Validators.pattern(
-            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
-          ),
+          Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})/),
         ],
       ],
       confirmPassword: ['', Validators.required],
@@ -164,9 +162,7 @@ export class UserFormComponent implements OnInit {
       this.userForm
         .get('password')
         ?.setValidators([
-          Validators.pattern(
-            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
-          ),
+          Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})/),
         ]);
       this.userForm.addValidators(
         ConfirmPasswordValidator(
