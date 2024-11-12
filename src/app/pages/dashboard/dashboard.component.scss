@@ -151,3 +151,9 @@
     margin-left: 15px;
   }
 }
+
+::ng-deep {
+  .p-toolbar-group-left {
+    width: 80% !important;
+  }
+}

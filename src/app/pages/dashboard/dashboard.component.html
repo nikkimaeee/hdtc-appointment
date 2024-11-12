@@ -179,7 +179,65 @@
       </div>
       <div class="col-12" *ngIf="isAdmin && isPasswordAccepted">
         <div class="card">
-          <h5>Sales Report</h5>
+          <h3>Sales Report</h3>
+          <p-toolbar styleClass="mb-4">
+            <ng-template pTemplate="left">
+              <div class="grid w-100">
+                <div class="field col-12 md:col-6 lg:col-2 dashboard">
+                  <label>Status</label>
+                  <p-dropdown
+                    [options]="status"
+                    [(ngModel)]="selectedStatus"></p-dropdown>
+                </div>
+                <div class="field col-12 md:col-6 lg:col-3 dashboard">
+                  <label *ngIf="!isAnnual">Date Range</label>
+                  <p-calendar
+                    [(ngModel)]="rangeDates"
+                    selectionMode="range"
+                    [readonlyInput]="true"
+                    inputId="range"
+                    [showClear]="true"
+                    *ngIf="!isAnnual"></p-calendar>
+                  <label *ngIf="isAnnual">Year</label>
+                  <p-calendar
+                    [(ngModel)]="year"
+                    view="year"
+                    dateFormat="yy"
+                    inputId="yearpicker"
+                    *ngIf="isAnnual"></p-calendar>
+                </div>
+                <div
+                  class="field col-12 md:col-6 lg:col-2 dashboard align-content-end">
+                  <div class="field-checkbox">
+                    <p-checkbox
+                      [(ngModel)]="isAnnual"
+                      [binary]="true"
+                      inputId="binary"></p-checkbox>
+                    <label for="binary">Annual</label>
+                  </div>
+                </div>
+                <div
+                  class="field col-12 md:col-6 lg:col-3 dashboard align-content-end">
+                  <p-button
+                    label="Apply Filter"
+                    icon="pi pi-search"
+                    (onClick)="applyFilter()"></p-button>
+                </div>
+              </div>
+            </ng-template>
+            <ng-template pTemplate="right">
+              <button
+                pButton
+                pRipple
+                type="button"
+                pTooltip="Export Excel"
+                tooltipPosition="bottom"
+                label="Export"
+                icon="pi pi-file-excel"
+                class="p-button-success"
+                (click)="exportExcel()"></button>
+            </ng-template>
+          </p-toolbar>
           <p-table
             [value]="sales"
             [rows]="5"
@@ -187,37 +245,6 @@
             [rowsPerPageOptions]="[5, 10, 25, 50]">
             <ng-template pTemplate="caption">
               <div class="grid">
-                <div class="field col-12 md:col-6 lg:col-4 dashboard">
-                  <p-calendar
-                    [(ngModel)]="rangeDates"
-                    selectionMode="range"
-                    [readonlyInput]="true"
-                    inputId="range"
-                    [showIcon]="true"></p-calendar>
-                </div>
-                <div class="field col-12 md:col-6 lg:col-3 dashboard">
-                  <p-dropdown
-                    [options]="status"
-                    [(ngModel)]="selectedStatus"></p-dropdown>
-                </div>
-                <div class="field col-12 md:col-6 lg:col-3 dashboard">
-                  <p-button
-                    label="Apply Filter"
-                    icon="pi pi-search"
-                    (onClick)="applyFilter()"></p-button>
-                </div>
-                <div class="field col-12 md:col-6 lg:col-2 dashboard text-end">
-                  <button
-                    pButton
-                    pRipple
-                    type="button"
-                    pTooltip="Export Excel"
-                    tooltipPosition="bottom"
-                    label="Export"
-                    icon="pi pi-file-excel"
-                    class="p-button-success"
-                    (click)="exportExcel()"></button>
-                </div>
                 <div class="flex justify-content-end col-12">
                   <h4>Total Sales: {{ totals | currency : 'PHP' }}</h4>
                 </div>

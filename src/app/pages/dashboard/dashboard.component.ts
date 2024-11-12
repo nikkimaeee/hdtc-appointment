@@ -41,6 +41,8 @@ export class DashboardComponent implements OnInit {
   isPasswordAccepted: boolean = false;
   showPassword: boolean = false;
   salesReportPassword: string = '';
+  isAnnual: boolean = false;
+  year: Date = new Date();
 
   pageTitle: string | undefined;
   constructor(
@@ -184,19 +186,37 @@ export class DashboardComponent implements OnInit {
   }
 
   applyFilter() {
-    let payload = {
-      dateFrom: formatDate(
-        this.rangeDates[0],
-        'yyyy-MM-ddT00:00:00.000',
-        'en-US'
-      ),
-      dateTo: formatDate(
-        this.rangeDates[1],
-        'yyyy-MM-ddT00:00:00.000',
-        'en-US'
-      ),
-      status: this.selectedStatus,
-    };
+    let payload = {};
+
+    if (this.rangeDates || this.isAnnual) {
+      payload = {
+        dateFrom: this.isAnnual
+          ? formatDate(this.year, 'yyyy-MM-ddT00:00:00.000', 'en-US')
+          : formatDate(this.rangeDates[0], 'yyyy-MM-ddT00:00:00.000', 'en-US'),
+        dateTo: this.isAnnual
+          ? formatDate(
+              new Date(this.year.getFullYear(), 11, 31),
+              'yyyy-MM-ddT00:00:00.000',
+              'en-US'
+            )
+          : formatDate(this.rangeDates[1], 'yyyy-MM-ddT00:00:00.000', 'en-US'),
+        status: this.selectedStatus,
+      };
+    } else {
+      payload = {
+        dateFrom: formatDate(
+          new Date('1/1/0001 12:00:00 AM'),
+          'yyyy-MM-ddT00:00:00.000',
+          'en-US'
+        ),
+        dateTo: formatDate(
+          new Date('12/31/2050 12:00:00 AM'),
+          'yyyy-MM-ddT00:00:00.000',
+          'en-US'
+        ),
+        status: this.selectedStatus,
+      };
+    }
 
     this.loadSales(payload);
     this.calculateTotalSales();
