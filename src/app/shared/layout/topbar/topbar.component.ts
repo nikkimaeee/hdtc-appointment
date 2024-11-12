@@ -1,4 +1,10 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnChanges,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '@core/auth';
 import { IUser } from '@shared/interface';
@@ -10,7 +16,7 @@ import { LayoutService } from '@shared/services/app.layout.service';
   templateUrl: './topbar.component.html',
   styleUrls: ['./topbar.component.scss'],
 })
-export class TopbarComponent {
+export class TopbarComponent implements OnInit, OnChanges {
   currentUser: IUser | undefined;
   items!: MegaMenuItem[];
   loading = [false, false, false, false];
@@ -30,90 +36,44 @@ export class TopbarComponent {
     private authenticationService: AuthenticationService,
     public layoutService: LayoutService
   ) {
-    this.authenticationService.currentUser.subscribe(
-      x => (this.currentUser = x)
-    );
+    this.authenticationService.currentUser.subscribe(x => {
+      this.currentUser = x;
 
-    this.items = [
-      {
-        label: '',
-        icon: 'pi pi-fw pi-cog',
-        items: [
-          [
-            {
-              label: `${this.currentUser?.firstName} ${this.currentUser?.lastName}`,
-              items: [
-                {
-                  label: 'Profile',
-                  icon: 'pi pi-fw pi-user',
-                  routerLink: '/admin/profile',
-                },
-                {
-                  label: 'Logout',
-                  icon: 'pi pi-fw pi-power-off',
-                  command: () => this.logout(),
-                },
-              ],
-            },
+      this.items = [
+        {
+          label: '',
+          icon: 'pi pi-fw pi-cog',
+          items: [
+            [
+              {
+                label: this.getUserDetails,
+                items: [
+                  {
+                    label: 'Profile',
+                    icon: 'pi pi-fw pi-user',
+                    routerLink: '/admin/profile',
+                  },
+                  {
+                    label: 'Logout',
+                    icon: 'pi pi-fw pi-power-off',
+                    command: () => this.logout(),
+                  },
+                ],
+              },
+            ],
           ],
-        ],
-      },
-    ];
-    this.loadMenus();
+        },
+      ];
+    });
   }
 
-  loadMenus() {
-    this.tieredItems = [
-      {
-        label: 'Home',
-        routerLink: [`/`],
-        icon: 'my-margin-left',
-      },
-      {
-        label: 'Services Offered',
-        routerLink: ['/service-catalog'],
-      },
-      {
-        label: 'Dashboard',
-        routerLink: ['/admin'],
-        visible: this.isAuthenticated,
-      },
-      {
-        label: 'Contact Us',
-        routerLink: ['/contact_us'],
-      },
-      {
-        label: 'Make An Appoinment',
-        routerLink: ['/appointment'],
-        visible: !this.isAdmin,
-      },
-      {
-        label: 'Login',
-        routerLink: ['/login'],
-        visible: !this.isAuthenticated,
-      },
-      {
-        label: 'Sign Up',
-        routerLink: ['/register'],
-        visible: !this.isAuthenticated,
-      },
-      {
-        label: `${this.currentUser?.firstName} ${this.currentUser?.lastName}`,
-        items: [
-          {
-            label: 'Profile',
-            icon: 'pi pi-fw pi-user',
-            routerLink: '/admin/profile',
-          },
-          {
-            label: 'Logout',
-            icon: 'pi pi-fw pi-power-off',
-            command: () => this.logout(),
-          },
-        ],
-        visible: this.isAuthenticated,
-      },
-    ];
+  get getUserDetails() {
+    let currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+    if (currentUser != '{}') {
+      return `${currentUser.firstName} ${currentUser.lastName}`;
+    }
+
+    return '';
   }
 
   ngOnInit(): void {
@@ -123,6 +83,10 @@ export class TopbarComponent {
     if (this.router.url.split('/')[1] === 'admin') {
       this.isAdminPage = true;
     }
+  }
+
+  ngOnChanges(): void {
+    console.log('change');
   }
 
   logout() {

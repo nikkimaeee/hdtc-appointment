@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AuthenticationService } from '@app/core/auth';
 import { ConfirmPasswordValidator } from '@app/core/validators/confirm-password.validator';
 import { HttpService } from '@app/shared/services';
 import { MessageService } from 'primeng/api';
@@ -24,11 +25,15 @@ export class ProfileComponent implements OnInit {
     private messageService: MessageService,
     private route: ActivatedRoute,
     private router: Router,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private authSvc: AuthenticationService
   ) {
     this.userForm = this.fb.group({
-      firstName: ['', [Validators.required, Validators.pattern(/[\S]/)]],
-      lastName: ['', [Validators.required, Validators.pattern(/[\S]/)]],
+      firstName: [
+        '',
+        [Validators.required, Validators.pattern(/^[a-zA-Z ]*$/)],
+      ],
+      lastName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z ]*$/)]],
       email: ['', [Validators.required, Validators.email]],
       password: [
         '',
@@ -47,6 +52,10 @@ export class ProfileComponent implements OnInit {
       isSenior: false,
       userId: '',
     });
+  }
+
+  get f() {
+    return this.userForm.controls;
   }
 
   ngOnInit(): void {
@@ -101,17 +110,21 @@ export class ProfileComponent implements OnInit {
       return;
     }
 
+    let firstname = this.userForm.get('firstName')?.value;
+    let lastName = this.userForm.get('lastName')?.value;
+    let email = this.userForm.get('email')?.value;
     this.httpSvc
       .post('Admin/UpdateUser', this.userForm.getRawValue())
       .subscribe(
         response => {
+          this.authSvc.updateUser(firstname, lastName, email);
           this.messageService.add({
             severity: response.status.toLowerCase(),
             summary: 'Save Record',
             detail: response.message,
           });
 
-          this.router.navigate(['admin/users']);
+          this.router.navigate(['admin']);
         },
         error => {
           this.messageService.add({

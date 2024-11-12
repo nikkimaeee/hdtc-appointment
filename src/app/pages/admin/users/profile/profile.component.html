@@ -25,9 +25,16 @@
                 [ngClass]="{
                   'ng-dirty': validateControl('firstName')
                 }" />
-              <small *ngIf="validateControl('firstName')" class="p-error"
-                >First Name is required.</small
-              >
+              <small
+                class="text-danger"
+                *ngIf="validateControl('firstName') && userForm.get('firstName')?.errors?.['required']">
+                FirstName is required
+              </small>
+              <small
+                class="text-danger"
+                *ngIf="validateControl('firstName') && userForm.get('firstName')?.errors?.['pattern']">
+                FirstName is invalid
+              </small>
             </div>
             <div class="field col">
               <label htmlFor="lastName"
@@ -39,9 +46,16 @@
                 formControlName="lastName"
                 type="text"
                 [ngClass]="{ 'ng-dirty': validateControl('lastName') }" />
-              <small *ngIf="validateControl('lastName')" class="p-error"
-                >Last Name is required.</small
-              >
+              <small
+                class="text-danger"
+                *ngIf="validateControl('lastName') && userForm.get('lastName')?.errors?.['required']">
+                LastName is required
+              </small>
+              <small
+                class="text-danger"
+                *ngIf="validateControl('lastName') && userForm.get('lastName')?.errors?.['pattern']">
+                LastName is invalid
+              </small>
             </div>
           </div>
           <div class="p-formgrid grid">

@@ -32,8 +32,11 @@ export class UserFormComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef
   ) {
     this.userForm = this.fb.group({
-      firstName: ['', [Validators.required, Validators.pattern(/[\S]/)]],
-      lastName: ['', [Validators.required, Validators.pattern(/[\S]/)]],
+      firstName: [
+        '',
+        [Validators.required, Validators.pattern(/^[a-zA-Z ]*$/)],
+      ],
+      lastName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z ]*$/)]],
       email: ['', [Validators.required, Validators.email]],
       password: [
         '',
@@ -52,6 +55,10 @@ export class UserFormComponent implements OnInit {
       isSenior: false,
       userId: '',
     });
+  }
+
+  get f() {
+    return this.userForm.controls;
   }
 
   ngOnInit(): void {
