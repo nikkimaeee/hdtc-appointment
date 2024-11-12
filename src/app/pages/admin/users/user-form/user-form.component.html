@@ -27,12 +27,12 @@
                 }" />
               <small
                 class="text-danger"
-                *ngIf="(f['firstname'].touched) && f['firstname'].errors?.['required']">
+                *ngIf="(f['firstname']?.touched) && f['firstname']?.errors?.['required']">
                 FirstName is required
               </small>
               <small
                 class="text-danger"
-                *ngIf="(f['firstname'].touched) && f['firstname'].errors?.['pattern']">
+                *ngIf="(f['firstname']?.touched) && f['firstname']?.errors?.['pattern']">
                 FirstName is invalid
               </small>
             </div>
@@ -48,12 +48,12 @@
                 [ngClass]="{ 'ng-dirty': validateControl('lastName') }" />
               <small
                 class="text-danger"
-                *ngIf="(f['lastName'].touched) && f['lastName'].errors?.['required']">
+                *ngIf="(f['lastName']?.touched) && f['lastName']?.errors?.['required']">
                 LastName is required
               </small>
               <small
                 class="text-danger"
-                *ngIf="(f['lastName'].touched) && f['lastName'].errors?.['pattern']">
+                *ngIf="(f['lastName']?.touched) && f['lastName']?.errors?.['pattern']">
                 LastName is invalid
               </small>
             </div>

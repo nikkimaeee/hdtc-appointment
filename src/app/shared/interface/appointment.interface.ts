@@ -40,4 +40,7 @@ export interface IAppointmentTable {
   hmoReference?: string;
   patientInformation: IPatientInformation;
   appointmentTimeLabel: string;
+  isPwd?: boolean;
+  isPregnant?: boolean;
+  isSenior?: boolean;
 }

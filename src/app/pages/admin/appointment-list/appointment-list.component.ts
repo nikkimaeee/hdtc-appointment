@@ -48,6 +48,8 @@ export class AppointmentListComponent implements OnInit {
   selectedStatus = 'Pending';
   dateFrom: any;
   dateTo: any;
+  isAnnual: boolean = false;
+  year: Date = new Date();
 
   constructor(
     private httpSvc: HttpService,
@@ -80,16 +82,30 @@ export class AppointmentListComponent implements OnInit {
   }
 
   loadData(event: LazyLoadEvent) {
-    this.dateFrom = formatDate(
-      this.rangeDates[0],
-      'yyyy-MM-ddT00:00:00.000',
-      'en-US'
-    );
-    this.dateTo = formatDate(
-      this.rangeDates[1],
-      'yyyy-MM-ddT00:00:00.000',
-      'en-US'
-    );
+    if (this.rangeDates || this.isAnnual) {
+      this.dateFrom = this.isAnnual
+        ? formatDate(this.year, 'yyyy-MM-ddT00:00:00.000', 'en-US')
+        : formatDate(this.rangeDates[0], 'yyyy-MM-ddT00:00:00.000', 'en-US');
+
+      this.dateTo = this.isAnnual
+        ? formatDate(
+            new Date(this.year.getFullYear(), 11, 31),
+            'yyyy-MM-ddT00:00:00.000',
+            'en-US'
+          )
+        : formatDate(this.rangeDates[1], 'yyyy-MM-ddT00:00:00.000', 'en-US');
+    } else {
+      this.dateFrom = formatDate(
+        new Date('1/1/0001 12:00:00 AM'),
+        'yyyy-MM-ddT00:00:00.000',
+        'en-US'
+      );
+      this.dateTo = formatDate(
+        new Date('12/31/2050 12:00:00 AM'),
+        'yyyy-MM-ddT00:00:00.000',
+        'en-US'
+      );
+    }
 
     let first = event.first ?? 0;
     let rows = event.rows ?? 10;
@@ -367,6 +383,7 @@ export class AppointmentListComponent implements OnInit {
       first: 0,
       rows: 10,
     };
+
     this.loadData(event);
   }
 
@@ -405,5 +422,17 @@ export class AppointmentListComponent implements OnInit {
           );
       },
     });
+  }
+
+  getPatienType(appointment: IAppointmentTable) {
+    if (appointment.isPwd) {
+      return 'PWD';
+    } else if (appointment.isPregnant) {
+      return 'Pregnant';
+    } else if (appointment.isSenior) {
+      return 'Senior';
+    } else {
+      return '-';
+    }
   }
 }
