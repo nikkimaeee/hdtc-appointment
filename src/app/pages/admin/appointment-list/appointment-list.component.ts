@@ -134,7 +134,7 @@ export class AppointmentListComponent implements OnInit {
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
         // call paypal
-        if (!item.isWalkIn) {
+        if (action === 'refund') {
           const headers = new HttpHeaders()
             .set('Content-Type', 'application/json; charset=utf-8')
             .set(
