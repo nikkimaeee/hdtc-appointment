@@ -39,6 +39,7 @@ import { PatientRecordComponent } from './pages/admin/patient-record/patient-rec
 import { PatientRecordDetailsComponent } from './pages/admin/patient-record/patient-record-details/patient-record-details.component';
 import { InquiryComponent } from './pages/admin/inquiry/inquiry.component';
 import { InquiryDetailsComponent } from './pages/admin/inquiry/inquiry-details/inquiry-details.component';
+import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
 
 export function tokenGetter() {
   return localStorage.getItem('jwt');
@@ -75,6 +76,7 @@ export function tokenGetter() {
     PatientRecordDetailsComponent,
     InquiryComponent,
     InquiryDetailsComponent,
+    ResetPasswordComponent,
   ],
   imports: [
     BrowserModule,

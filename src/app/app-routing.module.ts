@@ -28,6 +28,7 @@ import { PatientRecordComponent } from './pages/admin/patient-record/patient-rec
 import { PatientRecordDetailsComponent } from './pages/admin/patient-record/patient-record-details/patient-record-details.component';
 import { InquiryComponent } from './pages/admin/inquiry/inquiry.component';
 import { InquiryDetailsComponent } from './pages/admin/inquiry/inquiry-details/inquiry-details.component';
+import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
 
 const routes: Routes = [
   {
@@ -173,6 +174,10 @@ const routes: Routes = [
   {
     path: 'confirm',
     component: EmailVerifyComponent,
+  },
+  {
+    path: 'resetpassword',
+    component: ResetPasswordComponent,
   },
   {
     path: '**',

@@ -27,6 +27,8 @@ export class LoginComponent implements OnInit {
   isVerified = true;
   isSubmitted = false;
   email: string = '';
+  showResetForm: boolean = false;
+  resetPassForm: FormGroup;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -44,6 +46,10 @@ export class LoginComponent implements OnInit {
     this.loginForm = this.formBuilder.group({
       username: ['', Validators.required],
       password: ['', Validators.required],
+    });
+
+    this.resetPassForm = this.formBuilder.group({
+      email: ['', Validators.required],
     });
   }
 
@@ -122,5 +128,30 @@ export class LoginComponent implements OnInit {
     this.isVerified = true;
     this.submitted = false;
     this.loading = false;
+    this.resetPassForm.reset();
+    this.showResetForm = false;
+  }
+
+  resetPassword() {
+    let payload = {
+      email: this.resetPassForm.get('email')?.value,
+    };
+    this.httpSvc.post('Authenticate/ForgotPassword', payload).subscribe(
+      response => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Reset Password Link',
+          detail: `Reset Password Link Sent. Please check your email`,
+        });
+        this.resetForm();
+      },
+      err => {
+        this.messageService.add({
+          severity: 'danger',
+          summary: 'Reset Password Link',
+          detail: err.message,
+        });
+      }
+    );
   }
 }
