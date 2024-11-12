@@ -10,9 +10,6 @@
             <div class="d-flex">
               <div class="w-100">
                 <h3 class="mb-2 text-center" *ngIf="!showResetForm">Sign In</h3>
-                <h3 class="mb-2 text-center" *ngIf="showResetForm">
-                  Forgot Password
-                </h3>
               </div>
             </div>
             <form
@@ -81,10 +78,12 @@
               </div>
               <div class="text-center mt-4">
                 Don't have an account?
-                <a class="text-muted" routerLink="/register">Sign up</a>
+                <a class="text-muted cursor-pointer" routerLink="/register"
+                  >Sign up</a
+                >
                 <p-divider align="center">Or</p-divider>
                 Go back to
-                <a class="text-muted" routerLink="/">Home</a>
+                <a class="text-muted cursor-pointer" routerLink="/">Home</a>
               </div>
               <div class="text-center mt-4"></div>
             </form>
@@ -94,6 +93,9 @@
               *ngIf="showResetForm"
               class="reset-form align-content-center">
               <div class="form-group mb-4 mt-3">
+                <h3 class="mb-2 text-center" *ngIf="showResetForm">
+                  Forgot Password
+                </h3>
                 <label for="float-input">Email</label>
                 <input
                   type="text"
@@ -118,6 +120,17 @@
                     class="spinner-border spinner-border-sm mr-1"></span>
                   Reset Password
                 </button>
+              </div>
+              <div class="text-center mt-4">
+                Back to
+                <a
+                  class="text-muted cursor-pointer"
+                  (click)="showResetForm = false"
+                  >Sign In</a
+                >
+                <p-divider align="center">Or</p-divider>
+                Go back to
+                <a class="text-muted cursor-pointer" routerLink="/">Home</a>
               </div>
             </form>
           </div>
