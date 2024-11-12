@@ -45,14 +45,15 @@ export class RegisterComponent implements OnInit {
         '',
         [
           Validators.required,
-          Validators.pattern(
-            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
-          ),
+          Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})/),
         ],
       ],
       confirmPassword: ['', Validators.required],
-      firstname: ['', [Validators.required, Validators.pattern(/[\S]/)]],
-      lastname: ['', [Validators.required, Validators.pattern(/[\S]/)]],
+      firstname: [
+        '',
+        [Validators.required, Validators.pattern(/^[a-zA-Z ]*$/)],
+      ],
+      lastname: ['', [Validators.required, Validators.pattern(/^[a-zA-Z ]*$/)]],
       phone: ['', Validators.required],
       email: ['', [Validators.email, Validators.required]],
       isPwd: false,
@@ -121,9 +122,7 @@ export class RegisterComponent implements OnInit {
       this.registerForm
         .get('password')
         ?.setValidators([
-          Validators.pattern(
-            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
-          ),
+          Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})/),
         ]);
       this.registerForm.addValidators(
         ConfirmPasswordValidator(
@@ -140,9 +139,7 @@ export class RegisterComponent implements OnInit {
       this.registerForm
         .get('password')
         ?.setValidators([
-          Validators.pattern(
-            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
-          ),
+          Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})/),
           Validators.required,
         ]);
       this.registerForm.get('password')?.setErrors({ required: true });

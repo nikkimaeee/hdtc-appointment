@@ -22,8 +22,13 @@
                   <div class="p-inputgroup">
                     <small
                       class="text-danger"
-                      *ngIf="validateControl('firstname')">
+                      *ngIf="(f['firstname'].touched || submitted) && f['firstname'].errors?.['required']">
                       FirstName is required
+                    </small>
+                    <small
+                      class="text-danger"
+                      *ngIf="(f['firstname'].touched || submitted) && f['firstname'].errors?.['pattern']">
+                      Firstname is invalid
                     </small>
                   </div>
                 </div>
@@ -40,6 +45,11 @@
                       class="text-danger"
                       *ngIf="(f['lastname'].touched || submitted) && f['lastname'].errors?.['required']">
                       LastName is required
+                    </small>
+                    <small
+                      class="text-danger"
+                      *ngIf="(f['lastname'].touched || submitted) && f['lastname'].errors?.['pattern']">
+                      Firstname is invalid
                     </small>
                   </div>
                 </div>
@@ -59,6 +69,11 @@
                       *ngIf="(f['email'].touched || submitted) && f['email'].errors?.['required']">
                       Email is required
                     </small>
+                    <small
+                      class="text-danger"
+                      *ngIf="(f['email'].touched || submitted) && f['email'].errors?.['email']">
+                      Email is invalid
+                    </small>
                   </div>
                 </div>
                 <div class="col-md-12 col-lg-6">
@@ -71,12 +86,6 @@
                       placeholder="999-999-9999"
                       styleClass="form-control form-control-lg registration"></p-inputMask>
                   </div>
-                  <!-- <input
-                    type="text"
-                    pInputMask
-                    formControlName="phone"
-                    class="form-control form-control-lg" /> -->
-
                   <div class="p-inputgroup">
                     <small
                       class="text-danger"

@@ -22,6 +22,19 @@ export class AuthenticationService {
     return this.currentUserSubject.value;
   }
 
+  updateUser(firstName: string, lastName: string, email: string) {
+    let currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+    if (currentUser != '{}') {
+      currentUser.firstName = firstName;
+      currentUser.lastName = lastName;
+      currentUser.username = email;
+    }
+    localStorage.removeItem('currentUser');
+    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+    this.currentUserSubject.next(currentUser);
+    this.currentUser = this.currentUserSubject.asObservable();
+  }
+
   login(username: string, password: string) {
     return this.http
       .post<any>(`${environment.apiUrl}/api/Authenticate/login`, {

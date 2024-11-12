@@ -87,14 +87,12 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
             }
           );
         }
-
-        if (this.layoutService.state.staticMenuMobileActive) {
-          this.blockBodyScroll();
-        }
       });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    console.log('init');
+  }
 
   hideMenu() {
     this.layoutService.state.overlayMenuActive = false;
@@ -104,7 +102,6 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
       this.menuOutsideClickListener();
       this.menuOutsideClickListener = null;
     }
-    this.unblockBodyScroll();
   }
 
   hideProfileMenu() {
@@ -112,28 +109,6 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
     if (this.profileMenuOutsideClickListener) {
       this.profileMenuOutsideClickListener();
       this.profileMenuOutsideClickListener = null;
-    }
-  }
-
-  blockBodyScroll(): void {
-    if (document.body.classList) {
-      document.body.classList.add('blocked-scroll');
-    } else {
-      document.body.className += ' blocked-scroll';
-    }
-  }
-
-  unblockBodyScroll(): void {
-    if (document.body.classList) {
-      document.body.classList.remove('blocked-scroll');
-    } else {
-      document.body.className = document.body.className.replace(
-        new RegExp(
-          '(^|\\b)' + 'blocked-scroll'.split(' ').join('|') + '(\\b|$)',
-          'gi'
-        ),
-        ' '
-      );
     }
   }
 

@@ -32,16 +32,17 @@ export class UserFormComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef
   ) {
     this.userForm = this.fb.group({
-      firstName: ['', [Validators.required, Validators.pattern(/[\S]/)]],
-      lastName: ['', [Validators.required, Validators.pattern(/[\S]/)]],
+      firstName: [
+        '',
+        [Validators.required, Validators.pattern(/^[a-zA-Z ]*$/)],
+      ],
+      lastName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z ]*$/)]],
       email: ['', [Validators.required, Validators.email]],
       password: [
         '',
         [
           Validators.required,
-          Validators.pattern(
-            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
-          ),
+          Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})/),
         ],
       ],
       confirmPassword: ['', Validators.required],
@@ -52,6 +53,10 @@ export class UserFormComponent implements OnInit {
       isSenior: false,
       userId: '',
     });
+  }
+
+  get f() {
+    return this.userForm.controls;
   }
 
   ngOnInit(): void {
@@ -157,9 +162,7 @@ export class UserFormComponent implements OnInit {
       this.userForm
         .get('password')
         ?.setValidators([
-          Validators.pattern(
-            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
-          ),
+          Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})/),
         ]);
       this.userForm.addValidators(
         ConfirmPasswordValidator(
