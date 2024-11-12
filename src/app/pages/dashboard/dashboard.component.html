@@ -200,11 +200,23 @@
                     [options]="status"
                     [(ngModel)]="selectedStatus"></p-dropdown>
                 </div>
-                <div class="field col-12 md:col-6 lg:col-4 dashboard">
+                <div class="field col-12 md:col-6 lg:col-3 dashboard">
                   <p-button
                     label="Apply Filter"
                     icon="pi pi-search"
                     (onClick)="applyFilter()"></p-button>
+                </div>
+                <div class="field col-12 md:col-6 lg:col-2 dashboard text-end">
+                  <button
+                    pButton
+                    pRipple
+                    type="button"
+                    pTooltip="Export Excel"
+                    tooltipPosition="bottom"
+                    label="Export"
+                    icon="pi pi-file-excel"
+                    class="p-button-success"
+                    (click)="exportExcel()"></button>
                 </div>
                 <div class="flex justify-content-end col-12">
                   <h4>Total Sales: {{ totals | currency : 'PHP' }}</h4>

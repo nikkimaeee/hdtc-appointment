@@ -7,6 +7,7 @@ import { HttpService } from '@app/shared/services';
 import { environment } from '@environments/environment';
 import { faBars, faBell, faChartLine } from '@fortawesome/free-solid-svg-icons';
 import { MessageService } from 'primeng/api';
+import * as FileSaver from 'file-saver';
 
 @Component({
   selector: 'app-dashboard',
@@ -76,6 +77,24 @@ export class DashboardComponent implements OnInit {
 
     if (!this.isAdmin) {
       this.loadPatientHistory();
+    }
+
+    if (this.isPasswordAccepted) {
+      let payload = {
+        dateFrom: formatDate(
+          this.rangeDates[0],
+          'yyyy-MM-ddT00:00:00.000',
+          'en-US'
+        ),
+        dateTo: formatDate(
+          this.rangeDates[1],
+          'yyyy-MM-ddT00:00:00.000',
+          'en-US'
+        ),
+        status: this.selectedStatus,
+      };
+
+      this.loadSales(payload);
     }
   }
 
@@ -228,5 +247,30 @@ export class DashboardComponent implements OnInit {
   hideSales() {
     localStorage.removeItem('isPasswordAccepted');
     this.isPasswordAccepted = false;
+  }
+
+  exportExcel() {
+    import('xlsx').then(xlsx => {
+      const worksheet = xlsx.utils.json_to_sheet(this.sales);
+      const workbook = { Sheets: { data: worksheet }, SheetNames: ['data'] };
+      const excelBuffer: any = xlsx.write(workbook, {
+        bookType: 'xlsx',
+        type: 'array',
+      });
+      this.saveAsExcelFile(excelBuffer, 'products');
+    });
+  }
+
+  saveAsExcelFile(buffer: any, fileName: string): void {
+    let EXCEL_TYPE =
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+    let EXCEL_EXTENSION = '.xlsx';
+    const data: Blob = new Blob([buffer], {
+      type: EXCEL_TYPE,
+    });
+    FileSaver.saveAs(
+      data,
+      fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION
+    );
   }
 }
