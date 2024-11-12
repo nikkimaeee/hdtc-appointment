@@ -97,6 +97,7 @@ export class LoginComponent implements OnInit {
               ? 'Invalid Username/Password'
               : error.error.title;
           this.loading = false;
+          this.isSubmitted = false;
         },
       });
   }
