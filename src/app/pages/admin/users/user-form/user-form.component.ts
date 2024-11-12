@@ -52,6 +52,7 @@ export class UserFormComponent implements OnInit {
       isPregnant: false,
       isSenior: false,
       userId: '',
+      address: '',
     });
   }
 
@@ -95,6 +96,7 @@ export class UserFormComponent implements OnInit {
         isPregnant: response.isPregnant,
         isSenior: response.isSenior,
         userId: response.userId,
+        address: response.patientInformation.address,
       });
 
       this.userForm.get('password')?.setValidators(null);
