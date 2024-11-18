@@ -7,25 +7,62 @@
           <div class="col-12 md:col-12 lg:col-12">
             <h5>Select Service:<span style="color: red">*</span></h5>
           </div>
-          <div class="field col-12 md:col-12 lg:col-6">
-            <p-dropdown
-              [options]="product"
-              placeholder="Select Service"
-              optionLabel="name"
-              optionValue="id"
-              [showClear]="true"
-              formControlName="product"
-              [(ngModel)]="selectedProduct"
-              (onChange)="getDisabledDays($event)">
-              <ng-template pTemplate="selectedItem">
-                <div *ngIf="selectedProduct">{{ productDetails.name }}</div>
-              </ng-template>
-              <ng-template let-item pTemplate="item">
-                <div>
-                  <b>{{ item.name }}</b>
-                </div>
-              </ng-template>
-            </p-dropdown>
+          <div class="col-12 md:col-12 lg:col-12">
+            <div class="card">
+              <p-dataView
+                #dv
+                [value]="product"
+                [paginator]="true"
+                [rows]="9"
+                filterBy="name"
+                [sortField]="sortField"
+                [sortOrder]="sortOrder"
+                layout="grid">
+                <ng-template pTemplate="header">
+                  <div
+                    class="flex flex-column md:flex-row md:justify-content-between">
+                    <p-dropdown
+                      [options]="sortOptions"
+                      [(ngModel)]="sortKey"
+                      placeholder="Sort By Price"
+                      (onChange)="onSortChange($event)"
+                      styleClass="mb-2 md:mb-0"
+                      [ngModelOptions]="{ standalone: true }"></p-dropdown>
+                    <span class="p-input-icon-left mb-2 md:mb-0">
+                      <i class="pi pi-search"></i>
+                      <input
+                        type="search"
+                        pInputText
+                        placeholder="Search by Name"
+                        (input)="dv.filter($any($event.target).value)" />
+                    </span>
+                  </div>
+                </ng-template>
+                <ng-template let-product pTemplate="gridItem">
+                  <div
+                    class="col-12 md:col-6 lg:col-4"
+                    pTooltip="{{ product.description }}"
+                    tooltipPosition="right">
+                    <div
+                      class="product-grid-item card cursor-pointer"
+                      (click)="selecitem(product)"
+                      [ngStyle]="{
+                        border: selectedProduct == product.id ? 'solid' : 'none'
+                      }">
+                      <div class="product-grid-item-content">
+                        <img [src]="'data:image/jpg;base64,' + product.image" />
+                        <div class="product-name">{{ product.name }}</div>
+                      </div>
+                      <div class="product-grid-item-bottom">
+                        <span class="product-price">{{
+                          product.price | currency : 'PHP'
+                        }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </ng-template>
+              </p-dataView>
+            </div>
           </div>
         </div>
         <div class="grid" *ngIf="selectedProduct">

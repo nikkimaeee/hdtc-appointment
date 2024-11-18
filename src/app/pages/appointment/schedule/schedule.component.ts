@@ -8,6 +8,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { HttpService } from 'src/services/http.service';
 import { selectRecord, UpdateSchedule, UpdateTimeSlots } from '../store';
 import { IProduct } from '@app/shared/interface/product.interface';
+import { SelectItem } from 'primeng/api';
 
 @Component({
   selector: 'app-schedule',
@@ -26,6 +27,10 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   invalidDates: Array<Date> = [];
   showCalendar = false;
   selectedDuration!: number;
+  sortOptions!: SelectItem[];
+  sortOrder!: number;
+  sortField!: string;
+  sortKey: any;
 
   constructor(
     private router: Router,
@@ -100,6 +105,11 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     this.httpSvc.get('Admin/GetServices').subscribe(response => {
       this.product = response;
     });
+
+    this.sortOptions = [
+      { label: 'Price High to Low', value: '!price' },
+      { label: 'Price Low to High', value: 'price' },
+    ];
   }
 
   ngOnDestroy() {
@@ -107,7 +117,19 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     this.ngUnsubscribe.complete();
   }
 
-  getDisabledDays(event: any) {
+  onSortChange(event: any) {
+    let value = event.value;
+
+    if (value.indexOf('!') === 0) {
+      this.sortOrder = -1;
+      this.sortField = value.substring(1, value.length);
+    } else {
+      this.sortOrder = 1;
+      this.sortField = value;
+    }
+  }
+
+  getDisabledDays() {
     this.showCalendar = false;
     this.selectedTime = 0;
     this.appointmentDate = '';
@@ -189,5 +211,17 @@ export class ScheduleComponent implements OnInit, OnDestroy {
       }
     }
     return false;
+  }
+
+  selecitem(product: any) {
+    this.selectedProduct = product.id;
+    this.getDisabledDays();
+    this.scheduleForm.patchValue({
+      product: product.id,
+    });
+  }
+
+  getgetSelected(product: any) {
+    this.selectedProduct == product.id ? 'none' : 'solid';
   }
 }
