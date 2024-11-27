@@ -9,6 +9,12 @@ import { faBars, faBell, faChartLine } from '@fortawesome/free-solid-svg-icons';
 import { MessageService } from 'primeng/api';
 import * as FileSaver from 'file-saver';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { TDocumentDefinitions } from 'pdfmake/interfaces';
+import * as pdfMake from 'pdfmake/build/pdfmake';
+import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+import { style } from '@angular/animations';
+
+(<any>pdfMake).addVirtualFileSystem(pdfFonts);
 
 @Component({
   selector: 'app-dashboard',
@@ -297,7 +303,11 @@ export class DashboardComponent implements OnInit {
     if (this.rangeDates || this.isAnnual) {
       payload = {
         dateFrom: this.isAnnual
-          ? formatDate(new Date(this.year.getFullYear(), 0, 1), 'yyyy-MM-ddT00:00:00.000', 'en-US')
+          ? formatDate(
+              new Date(this.year.getFullYear(), 0, 1),
+              'yyyy-MM-ddT00:00:00.000',
+              'en-US'
+            )
           : formatDate(this.rangeDates[0], 'yyyy-MM-ddT00:00:00.000', 'en-US'),
         dateTo: this.isAnnual
           ? formatDate(
@@ -335,7 +345,7 @@ export class DashboardComponent implements OnInit {
       payload = {
         dateFrom: this.isPatientChartAnnual
           ? formatDate(
-            new Date(this.patientChartYear.getFullYear(), 0, 1),
+              new Date(this.patientChartYear.getFullYear(), 0, 1),
               'yyyy-MM-ddT00:00:00.000',
               'en-US'
             )
@@ -367,7 +377,7 @@ export class DashboardComponent implements OnInit {
           new Date('12/31/2050 12:00:00 AM'),
           'yyyy-MM-ddT00:00:00.000',
           'en-US'
-        )
+        ),
       };
     }
 
@@ -448,5 +458,112 @@ export class DashboardComponent implements OnInit {
 
   randomNum() {
     return Math.floor(Math.random() * (235 - 52 + 1) + 52);
+  }
+
+  extractSalesReport() {
+    console.log(this.sales);
+    let columns = [
+      {
+        text: 'Patient Name',
+        style: 'tableHeader',
+        alignment: 'center',
+      },
+      {
+        text: 'Appointment',
+        style: 'tableHeader',
+        alignment: 'center',
+      },
+      {
+        text: 'Services',
+        style: 'tableHeader',
+        alignment: 'center',
+      },
+      {
+        text: 'Status',
+        style: 'tableHeader',
+        alignment: 'center',
+      },
+      {
+        text: 'Price',
+        style: 'tableHeader',
+        alignment: 'center',
+      },
+    ];
+    let dd: TDocumentDefinitions = {
+      content: [
+        {
+          text: 'Sales Report',
+          style: 'header',
+        },
+        {
+          text: `Total Sales: ₱${parseFloat(this.totals.toString())
+            .toFixed(2)
+            .replace(/\d(?=(\d{3})+\.)/g, '$&,')}`,
+          style: 'salesTotal',
+        },
+        {
+          table: {
+            heights: [30, 'auto'],
+            widths: ['*', '*', '*', 70, 70],
+            body: this.buildTableBody(columns),
+          },
+          layout: {
+            fillColor: function (rowIndex, node, columnIndex) {
+              return rowIndex % 2 === 0 ? '#CCCCCC' : null;
+            },
+          },
+        },
+      ],
+      pageSize: 'A4',
+      pageOrientation: 'landscape',
+      styles: {
+        header: {
+          fontSize: 18,
+          bold: true,
+          margin: [0, 0, 0, 10],
+        },
+        subheader: {
+          fontSize: 16,
+          bold: true,
+          margin: [0, 10, 0, 5],
+        },
+        tableExample: {
+          margin: [0, 5, 0, 15],
+        },
+        tableHeader: {
+          bold: true,
+          fontSize: 13,
+          color: 'black',
+        },
+        salesTotal: {
+          fontSize: 15,
+          bold: true,
+          margin: [0, 0, 0, 10],
+          alignment: 'right',
+        },
+      },
+    };
+
+    pdfMake.createPdf(dd).print();
+  }
+
+  buildTableBody(columns: any) {
+    let body: any = [];
+
+    body.push(columns);
+    this.sales.forEach(element => {
+      let dataRow = [];
+      dataRow.push(element.patientName);
+      dataRow.push(element.appointment);
+      dataRow.push(element.service);
+      dataRow.push(element.status);
+      dataRow.push(
+        `₱${parseFloat(element.price.toString())
+          .toFixed(2)
+          .replace(/\d(?=(\d{3})+\.)/g, '$&,')}`
+      );
+      body.push(dataRow);
+    });
+    return body;
   }
 }
