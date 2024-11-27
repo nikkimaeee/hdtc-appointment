@@ -8,6 +8,7 @@ import { environment } from '@environments/environment';
 import { faBars, faBell, faChartLine } from '@fortawesome/free-solid-svg-icons';
 import { MessageService } from 'primeng/api';
 import * as FileSaver from 'file-saver';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 @Component({
   selector: 'app-dashboard',
@@ -43,6 +44,15 @@ export class DashboardComponent implements OnInit {
   salesReportPassword: string = '';
   isAnnual: boolean = false;
   year: Date = new Date();
+  patientChartDate: Date[] = [];
+  salesBreakdownData: any;
+  chartOption: any;
+  plugin = ChartDataLabels;
+  patientData: any;
+  newPatientCount: number = 0;
+  oldPatientCount: number = 0;
+  isPatientChartAnnual: boolean = false;
+  patientChartYear: Date = new Date();
 
   pageTitle: string | undefined;
   constructor(
@@ -55,6 +65,7 @@ export class DashboardComponent implements OnInit {
     let firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
     let lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
     this.rangeDates = [firstDay, lastDay];
+    this.patientChartDate = [firstDay, lastDay];
   }
 
   ngOnInit() {
@@ -70,9 +81,45 @@ export class DashboardComponent implements OnInit {
       (x: any) => x === 'Admin'
     );
 
+    this.chartOption = {
+      plugins: {
+        legend: {
+          labels: {
+            color: '#495057',
+          },
+          position: 'bottom',
+        },
+        tooltip: {
+          mode: 'index',
+          intersect: false,
+          callbacks: {
+            label: (tooltipItem: any, data: any) => {
+              return `${tooltipItem.label} : ${tooltipItem.raw}%`;
+            },
+          },
+        },
+      },
+    };
+
     if (this.isAdmin) {
       this.loadUsers();
       this.loadRegistration();
+      this.loadSalesBreakdown();
+
+      let payload = {
+        dateFrom: formatDate(
+          this.patientChartDate[0],
+          'yyyy-MM-ddT00:00:00.000',
+          'en-US'
+        ),
+        dateTo: formatDate(
+          this.patientChartDate[1],
+          'yyyy-MM-ddT00:00:00.000',
+          'en-US'
+        ),
+      };
+
+      this.loadPatientChart(payload);
     }
 
     this.loadPendingAppointments();
@@ -104,6 +151,65 @@ export class DashboardComponent implements OnInit {
     this.httpSvc.post('Admin/GetSales', payload).subscribe(response => {
       this.sales = response;
       this.calculateTotalSales();
+    });
+  }
+
+  loadSalesBreakdown() {
+    this.httpSvc.get('Admin/GetServiceBreakdownChart').subscribe(response => {
+      let labels: any = [];
+      let percentage: any = [];
+      let bgcolor: any = [];
+      response.forEach((element: any) => {
+        labels.push(element.productName);
+        percentage.push(element.percentage);
+        bgcolor.push(
+          `rgb(${this.randomNum()}, ${this.randomNum()}, ${this.randomNum()}`
+        );
+      });
+
+      if (response) {
+        this.salesBreakdownData = {
+          labels: labels,
+          datasets: [
+            {
+              data: percentage,
+              backgroundColor: bgcolor,
+            },
+          ],
+        };
+      }
+    });
+  }
+
+  loadPatientChart(payload: any) {
+    this.httpSvc.post('Admin/GetPatientChart', payload).subscribe(response => {
+      let labels: any = [];
+      let percentage: any = [];
+      let bgcolor: any = [];
+      response.forEach((element: any) => {
+        labels.push(element.patientType);
+        percentage.push(element.percentage);
+        bgcolor.push(
+          `rgb(${this.randomNum()}, ${this.randomNum()}, ${this.randomNum()}`
+        );
+        if (element.patientType === 'New Patient') {
+          this.newPatientCount = element.count;
+        } else {
+          this.oldPatientCount = element.count;
+        }
+      });
+
+      if (response) {
+        this.patientData = {
+          labels: labels,
+          datasets: [
+            {
+              data: percentage,
+              backgroundColor: bgcolor,
+            },
+          ],
+        };
+      }
     });
   }
 
@@ -191,7 +297,7 @@ export class DashboardComponent implements OnInit {
     if (this.rangeDates || this.isAnnual) {
       payload = {
         dateFrom: this.isAnnual
-          ? formatDate(this.year, 'yyyy-MM-ddT00:00:00.000', 'en-US')
+          ? formatDate(new Date(this.year.getFullYear(), 0, 1), 'yyyy-MM-ddT00:00:00.000', 'en-US')
           : formatDate(this.rangeDates[0], 'yyyy-MM-ddT00:00:00.000', 'en-US'),
         dateTo: this.isAnnual
           ? formatDate(
@@ -220,6 +326,52 @@ export class DashboardComponent implements OnInit {
 
     this.loadSales(payload);
     this.calculateTotalSales();
+  }
+
+  applyPatientChartFilter() {
+    let payload = {};
+
+    if (this.patientChartDate || this.isPatientChartAnnual) {
+      payload = {
+        dateFrom: this.isPatientChartAnnual
+          ? formatDate(
+            new Date(this.patientChartYear.getFullYear(), 0, 1),
+              'yyyy-MM-ddT00:00:00.000',
+              'en-US'
+            )
+          : formatDate(
+              this.patientChartDate[0],
+              'yyyy-MM-ddT00:00:00.000',
+              'en-US'
+            ),
+        dateTo: this.isPatientChartAnnual
+          ? formatDate(
+              new Date(this.patientChartYear.getFullYear(), 11, 31),
+              'yyyy-MM-ddT00:00:00.000',
+              'en-US'
+            )
+          : formatDate(
+              this.patientChartDate[1],
+              'yyyy-MM-ddT00:00:00.000',
+              'en-US'
+            ),
+      };
+    } else {
+      payload = {
+        dateFrom: formatDate(
+          new Date('1/1/0001 12:00:00 AM'),
+          'yyyy-MM-ddT00:00:00.000',
+          'en-US'
+        ),
+        dateTo: formatDate(
+          new Date('12/31/2050 12:00:00 AM'),
+          'yyyy-MM-ddT00:00:00.000',
+          'en-US'
+        )
+      };
+    }
+
+    this.loadPatientChart(payload);
   }
 
   loadPatientHistory() {
@@ -292,5 +444,9 @@ export class DashboardComponent implements OnInit {
       data,
       fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION
     );
+  }
+
+  randomNum() {
+    return Math.floor(Math.random() * (235 - 52 + 1) + 52);
   }
 }

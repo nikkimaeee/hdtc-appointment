@@ -35,6 +35,7 @@
     "bootstrap": "^5.2.2",
     "buffer": "^6.0.3",
     "chart.js": "^3.9.1",
+    "chartjs-plugin-datalabels": "^2.2.0",
     "file-saver": "^2.0.5",
     "jquery": "^3.6.1",
     "ngx-paypal": "^10.1.0",
