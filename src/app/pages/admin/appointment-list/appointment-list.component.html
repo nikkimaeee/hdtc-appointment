@@ -343,7 +343,6 @@
                 (click)="reschedule(appointment)"></button>
               <button
                 *ngIf="
-                  isAdmin &&
                   appointment.paymentMethod === 1 &&
                   appointment.status === 'Pending'
                 "
@@ -355,7 +354,6 @@
                 (click)="issueRefund(appointment, 'refund')"></button>
               <button
                 *ngIf="
-                  isAdmin &&
                   appointment.paymentMethod !== 1 &&
                   appointment.status === 'Pending'
                 "
