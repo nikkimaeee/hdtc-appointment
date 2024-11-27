@@ -544,7 +544,7 @@ export class DashboardComponent implements OnInit {
       },
     };
 
-    pdfMake.createPdf(dd).print();
+    pdfMake.createPdf(dd).download('Sales Report');
   }
 
   buildTableBody(columns: any) {
