@@ -59,6 +59,7 @@ export class DashboardComponent implements OnInit {
   oldPatientCount: number = 0;
   isPatientChartAnnual: boolean = false;
   patientChartYear: Date = new Date();
+  serviceRevenue: any[] = [];
 
   pageTitle: string | undefined;
   constructor(
@@ -126,6 +127,7 @@ export class DashboardComponent implements OnInit {
       };
 
       this.loadPatientChart(payload);
+      this.loadServiceRevenue();
     }
 
     this.loadPendingAppointments();
@@ -184,6 +186,12 @@ export class DashboardComponent implements OnInit {
           ],
         };
       }
+    });
+  }
+
+  loadServiceRevenue() {
+    this.httpSvc.get('Admin/GetServiceRevenue').subscribe(response => {
+      this.serviceRevenue = response;
     });
   }
 
@@ -567,103 +575,110 @@ export class DashboardComponent implements OnInit {
   }
 
   exportPatientInfo(item: any) {
-      console.log(item)
+    console.log(item);
 
-      let appointmentDate = formatDate(
-        new Date(item.information.appointmentDate),
-        'MMMM dd, yyyy',
-        'en-US'
-      );
+    let appointmentDate = formatDate(
+      new Date(item.information.appointmentDate),
+      'MMMM dd, yyyy',
+      'en-US'
+    );
 
-      let dd: TDocumentDefinitions = {
-        content: [
-          {
-            alignment: 'justify',
-            style: 'patientDetails',
-            columns: [
-              {
-                text: `Patient Name: ${item.patientInfo.firstName} ${item.patientInfo.lastName}`
-              },
-              {
-                text: `Appointment Date: ${appointmentDate}`
-              }
-            ]
-          },
-          {
-            alignment: 'justify',
-            style: 'patientDetails',
-            columns: [
-              {
-                text: `Address: ${item.patientInfo.address}`
-              },
-              {
-                text: `Email: ${item.patientInfo.email}`
-              }
-            ]
-          },
-          {
-            alignment: 'justify',
-            style: 'patientDetails',
-            columns: [
-              {
-                text: `Mobile #: +63${item.patientInfo.phone}`
-              }
-            ]
-          },
-          {
-            text: `Procedure: ${item.productInfo.name}`,
-            style: 'patientDetails'
-          },
-          {
-            text: 'Patient Files',
-            style: 'header'
-          },
-          {
-            table: {              
-              body: this.buildImageTable(item.information.attachments),
+    let dd: TDocumentDefinitions = {
+      content: [
+        {
+          alignment: 'justify',
+          style: 'patientDetails',
+          columns: [
+            {
+              text: `Patient Name: ${item.patientInfo.firstName} ${item.patientInfo.lastName}`,
             },
-			      layout: 'noBorders'
+            {
+              text: `Appointment Date: ${appointmentDate}`,
+            },
+          ],
+        },
+        {
+          alignment: 'justify',
+          style: 'patientDetails',
+          columns: [
+            {
+              text: `Address: ${item.patientInfo.address}`,
+            },
+            {
+              text: `Email: ${item.patientInfo.email}`,
+            },
+          ],
+        },
+        {
+          alignment: 'justify',
+          style: 'patientDetails',
+          columns: [
+            {
+              text: `Mobile #: +63${item.patientInfo.phone}`,
+            },
+          ],
+        },
+        {
+          text: `Procedure: ${item.productInfo.name}`,
+          style: 'patientDetails',
+        },
+        {
+          text: 'Patient Files',
+          style: 'header',
+        },
+        {
+          table: {
+            body: this.buildImageTable(item.information.attachments),
           },
-          {
-            text: `Prescriptions`, pageBreak: 'before',
-            style: 'header'
-          },
-          {
-            text: item. information.prescriptions
-          }
-        ],
-        pageSize: 'A4',
-        styles: {
-          patientDetails: {
-            margin: [0, 0, 0, 8],
-            fontSize: 13,
-            bold: true
-          },
-          header: {
-            fontSize: 18,
-            bold: true,
-            margin: [0, 20, 0, 10],
-          },
-        }
-      }
+          layout: 'noBorders',
+        },
+        {
+          text: `Prescriptions`,
+          pageBreak: 'before',
+          style: 'header',
+        },
+        {
+          text: item.information.prescriptions,
+        },
+      ],
+      pageSize: 'A4',
+      styles: {
+        patientDetails: {
+          margin: [0, 0, 0, 8],
+          fontSize: 13,
+          bold: true,
+        },
+        header: {
+          fontSize: 18,
+          bold: true,
+          margin: [0, 20, 0, 10],
+        },
+      },
+    };
 
-      pdfMake.createPdf(dd).download('Patient Details');
+    pdfMake.createPdf(dd).download('Patient Details');
   }
 
   buildImageTable(attachments: any) {
     let body: any = [];
     for (var j = 0; j < attachments.length; j++) {
-        let dataRow = [];
-        if(attachments[j].location) {
-          dataRow.push({image: `data:image/jpg;base64,${attachments[j].location}`, width: 200})
-        }
-        if((j+1) < attachments.length && attachments[j].location) {
-          dataRow.push({image: `data:image/jpg;base64,${attachments[j + 1].location}`, width: 200})
-        }
-        if(dataRow.length > 0) {
-          body.push(dataRow)
-        }
-        j++
+      let dataRow = [];
+      if (attachments[j].location) {
+        dataRow.push({
+          image: `data:image/jpg;base64,${attachments[j].location}`,
+          width: 200,
+        });
+      }
+      if (j + 1 < attachments.length && attachments[j].location) {
+        dataRow.push({
+          image: `data:image/jpg;base64,${attachments[j + 1].location}`,
+          width: 200,
+        });
+      }
+      if (dataRow.length > 0) {
+        body.push(dataRow);
+      }
+      j++;
     }
     return body;
   }

@@ -208,7 +208,47 @@
           </div>
         </div>
       </div>
-      <div class="col-12"></div>
+      <div class="col-12">
+        <div class="card">
+          <p-table
+            [value]="serviceRevenue"
+            [rows]="5"
+            [paginator]="true"
+            [rowsPerPageOptions]="[5, 10, 25, 50]">
+            <ng-template pTemplate="header">
+              <tr>
+                <th><h4>Service Revenue</h4></th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-service>
+              <tr>
+                <td>
+                  <h5>{{ service.productName }}</h5>
+                  <div class="grid">
+                    <div class="col-3 lg:col-offset-2">
+                      <label class="text-muted">Service Price</label>
+                      <p class="text-xl">
+                        {{ service.unitPrice | currency : 'PHP' }}
+                      </p>
+                    </div>
+                    <div class="col-3">
+                      <label class="text-muted">Service Count</label>
+                      <p class="text-xl">{{ service.serviceCount }}</p>
+                    </div>
+                    <div class="col-3">
+                      <label class="text-muted">Service Revenue</label>
+                      <p class="text-xl">
+                        {{ service.total | currency : 'PHP' }}
+                      </p>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="footer"> </ng-template>
+          </p-table>
+        </div>
+      </div>
       <div
         class="col-12 md:col-12 lg:col-4"
         *ngIf="!isPasswordAccepted && isAdmin">
