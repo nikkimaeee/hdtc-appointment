@@ -134,7 +134,7 @@ export class DashboardComponent implements OnInit {
       this.loadPatientHistory();
     }
 
-    if (this.isPasswordAccepted) {
+    if (this.isPasswordAccepted && this.isAdmin) {
       let payload = {
         dateFrom: formatDate(
           this.rangeDates[0],
@@ -461,7 +461,6 @@ export class DashboardComponent implements OnInit {
   }
 
   extractSalesReport() {
-    console.log(this.sales);
     let columns = [
       {
         text: 'Patient Name',
@@ -564,6 +563,108 @@ export class DashboardComponent implements OnInit {
       );
       body.push(dataRow);
     });
+    return body;
+  }
+
+  exportPatientInfo(item: any) {
+      console.log(item)
+
+      let appointmentDate = formatDate(
+        new Date(item.information.appointmentDate),
+        'MMMM dd, yyyy',
+        'en-US'
+      );
+
+      let dd: TDocumentDefinitions = {
+        content: [
+          {
+            alignment: 'justify',
+            style: 'patientDetails',
+            columns: [
+              {
+                text: `Patient Name: ${item.patientInfo.firstName} ${item.patientInfo.lastName}`
+              },
+              {
+                text: `Appointment Date: ${appointmentDate}`
+              }
+            ]
+          },
+          {
+            alignment: 'justify',
+            style: 'patientDetails',
+            columns: [
+              {
+                text: `Address: ${item.patientInfo.address}`
+              },
+              {
+                text: `Email: ${item.patientInfo.email}`
+              }
+            ]
+          },
+          {
+            alignment: 'justify',
+            style: 'patientDetails',
+            columns: [
+              {
+                text: `Mobile #: +63${item.patientInfo.phone}`
+              }
+            ]
+          },
+          {
+            text: `Procedure: ${item.productInfo.name}`,
+            style: 'patientDetails'
+          },
+          {
+            text: 'Patient Files',
+            style: 'header'
+          },
+          {
+            table: {              
+              body: this.buildImageTable(item.information.attachments),
+            },
+			      layout: 'noBorders'
+          },
+          {
+            text: `Prescriptions`, pageBreak: 'before',
+            style: 'header'
+          },
+          {
+            text: item. information.prescriptions
+          }
+        ],
+        pageSize: 'A4',
+        styles: {
+          patientDetails: {
+            margin: [0, 0, 0, 8],
+            fontSize: 13,
+            bold: true
+          },
+          header: {
+            fontSize: 18,
+            bold: true,
+            margin: [0, 20, 0, 10],
+          },
+        }
+      }
+
+      pdfMake.createPdf(dd).download('Patient Details');
+  }
+
+  buildImageTable(attachments: any) {
+    let body: any = [];
+    for (var j = 0; j < attachments.length; j++) {
+        let dataRow = [];
+        if(attachments[j].location) {
+          dataRow.push({image: `data:image/jpg;base64,${attachments[j].location}`, width: 200})
+        }
+        if((j+1) < attachments.length && attachments[j].location) {
+          dataRow.push({image: `data:image/jpg;base64,${attachments[j + 1].location}`, width: 200})
+        }
+        if(dataRow.length > 0) {
+          body.push(dataRow)
+        }
+        j++
+    }
     return body;
   }
 }
