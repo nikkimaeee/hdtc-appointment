@@ -24,8 +24,8 @@ export class MenuComponent implements OnInit {
         label: 'Menu',
         items: [
           {
-            label: 'Dashboard',
-            icon: 'pi pi-fw pi-home',
+            label: this.isAdmin ? 'Dashboard' : 'Patient History',
+            icon: this.isAdmin ? 'pi pi-fw pi-home' : 'pi pi-fw pi-history',
             routerLink: ['/admin'],
           },
           {

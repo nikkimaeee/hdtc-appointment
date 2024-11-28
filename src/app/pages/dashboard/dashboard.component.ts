@@ -128,9 +128,9 @@ export class DashboardComponent implements OnInit {
 
       this.loadPatientChart(payload);
       this.loadServiceRevenue();
+      this.loadPendingAppointments();
     }
 
-    this.loadPendingAppointments();
 
     if (!this.isAdmin) {
       this.loadPatientHistory();

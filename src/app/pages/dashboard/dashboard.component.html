@@ -2,7 +2,8 @@
   <div class="col-12">
     <div class="card border-0 rounded-lg">
       <div class="card-header justify-content-center bg-white border-0">
-        <h3 class="my-2">Dashboard</h3>
+        <h3 class="my-2" *ngIf="isAdmin">Dashboard</h3>
+        <h3 class="my-2" *ngIf="!isAdmin">Patient History</h3>
       </div>
     </div>
 
@@ -83,7 +84,7 @@
           </div>
         </div>
       </div>
-      <div class="col-12 md:col-6 lg:col-4">
+      <div class="col-12 md:col-6 lg:col-4" *ngIf="isAdmin">
         <div class="card mb-0">
           <div class="flex justify-content-between mb-3">
             <div>
@@ -102,7 +103,7 @@
           </div>
         </div>
       </div>
-      <div class="col-12 md:col-6 lg:col-4" *ngIf="!isAdmin">
+      <!-- <div class="col-12 md:col-6 lg:col-4" *ngIf="!isAdmin">
         <div class="card mb-0">
           <div class="flex justify-content-between mb-3">
             <div>
@@ -139,7 +140,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
       <div class="col-12 md:col-6 lg:col-6" *ngIf="isAdmin">
         <div class="card mb-0 h-100">
           <h3 class="mb-3">Service Breakdown</h3>
@@ -208,7 +209,7 @@
           </div>
         </div>
       </div>
-      <div class="col-12">
+      <div class="col-12" *ngIf="isAdmin">
         <div class="card">
           <p-table
             [value]="serviceRevenue"
