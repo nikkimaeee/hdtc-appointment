@@ -79,7 +79,9 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     this.http
-      .get('/assets/img/brand-logo.png', { responseType: 'blob' })
+      .get(`${environment.defaultUrl}assets/img/brand-logo.png`, {
+        responseType: 'blob',
+      })
       .subscribe(res => {
         const reader = new FileReader();
         reader.onloadend = () => {

@@ -10,6 +10,7 @@ export const environment = {
   paypalApi: 'https://api-m.sandbox.paypal.com/',
   paypalSecret:
     'EKCgWXpZGSJY1iExXhtMHYg-_0KoSpJnxJMGE3qEG1LTO_3z4EAyAT72R6mVTbb8OpalZEvHVvMAtzJv',
+  defaultUrl: 'http://localhost:4200/'
 };
 
 /*
