@@ -6,5 +6,5 @@ export const environment = {
   paypalApi: 'https://api.sandbox.paypal.com/',
   paypalSecret:
     'EKCgWXpZGSJY1iExXhtMHYg-_0KoSpJnxJMGE3qEG1LTO_3z4EAyAT72R6mVTbb8OpalZEvHVvMAtzJv',
-  defaultUrl: 'https://nikkimaeee.github.io/hdtc-appointment/'
+  defaultUrl: 'https://nikkimaeee.github.io/hdtc-appointment/',
 };
