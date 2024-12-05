@@ -60,13 +60,15 @@ export class DashboardComponent implements OnInit {
   isPatientChartAnnual: boolean = false;
   patientChartYear: Date = new Date();
   serviceRevenue: any[] = [];
+  logo: any;
 
   pageTitle: string | undefined;
   constructor(
     private httpSvc: HttpService,
     private messageService: MessageService,
     private authSvc: AuthenticationService,
-    private router: Router
+    private router: Router,
+    private http: HttpClient
   ) {
     let date = new Date();
     let firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
@@ -76,6 +78,18 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.http
+      .get('/assets/img/brand-logo.png', { responseType: 'blob' })
+      .subscribe(res => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          var base64data = reader.result;
+          this.logo = base64data;
+        };
+
+        reader.readAsDataURL(res);
+      });
+
     let storedBool = localStorage.getItem('isPasswordAccepted')
       ? JSON.parse(localStorage.getItem('isPasswordAccepted') || '{}')
       : null;
@@ -130,7 +144,6 @@ export class DashboardComponent implements OnInit {
       this.loadServiceRevenue();
       this.loadPendingAppointments();
     }
-
 
     if (!this.isAdmin) {
       this.loadPatientHistory();
@@ -499,6 +512,18 @@ export class DashboardComponent implements OnInit {
     let dd: TDocumentDefinitions = {
       content: [
         {
+          columns: [
+            {
+              image: this.logo,
+              width: 35,
+            },
+            {
+              text: 'Ocampo Dental Clinic',
+              style: 'title',
+            },
+          ],
+        },
+        {
           text: 'Sales Report',
           style: 'header',
         },
@@ -529,6 +554,12 @@ export class DashboardComponent implements OnInit {
           bold: true,
           margin: [0, 0, 0, 10],
         },
+        title: {
+          fontSize: 23,
+          bold: true,
+          margin: [0, 0, 0, 25],
+          color: 'grey',
+        },
         subheader: {
           fontSize: 16,
           bold: true,
@@ -552,6 +583,32 @@ export class DashboardComponent implements OnInit {
     };
 
     pdfMake.createPdf(dd).download('Sales Report');
+  }
+
+  getBase64ImageFromURL(url: string) {
+    return new Promise((resolve, reject) => {
+      var img = new Image();
+      img.setAttribute('crossOrigin', 'anonymous');
+
+      img.onload = () => {
+        var canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+
+        var ctx = canvas.getContext('2d');
+        ctx!.drawImage(img, 0, 0);
+
+        var dataURL = canvas.toDataURL('image/png');
+
+        resolve(dataURL);
+      };
+
+      img.onerror = error => {
+        reject(error);
+      };
+
+      img.src = url;
+    });
   }
 
   buildTableBody(columns: any) {
