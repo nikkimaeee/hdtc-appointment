@@ -510,19 +510,32 @@ export class DashboardComponent implements OnInit {
       },
     ];
     let dd: TDocumentDefinitions = {
+      header: 
+      {
+        margin:[10,10,10,10],
+        columns: [
+          {
+            image: this.logo,
+            width: 35,
+          },
+          {
+            text: 'Ocampo Dental Clinic',
+            style: 'title',
+          },
+        ],
+      },
+      footer:{
+        margin:[10,10,10,10],
+        columns: [
+          '',
+          { text: formatDate(
+            this.dateToday,
+            'MMMM dd, yyyy',
+            'en-US'
+          ), alignment: 'right' }
+        ]
+      },
       content: [
-        {
-          columns: [
-            {
-              image: this.logo,
-              width: 35,
-            },
-            {
-              text: 'Ocampo Dental Clinic',
-              style: 'title',
-            },
-          ],
-        },
         {
           text: 'Sales Report',
           style: 'header',
