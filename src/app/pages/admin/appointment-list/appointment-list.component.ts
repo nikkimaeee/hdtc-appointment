@@ -84,7 +84,11 @@ export class AppointmentListComponent implements OnInit {
   loadData(event: LazyLoadEvent) {
     if (this.rangeDates || this.isAnnual) {
       this.dateFrom = this.isAnnual
-        ? formatDate(this.year, 'yyyy-MM-ddT00:00:00.000', 'en-US')
+        ? formatDate(
+            new Date(this.year.getFullYear(), 0, 1),
+            'yyyy-MM-ddT00:00:00.000',
+            'en-US'
+          )
         : formatDate(this.rangeDates[0], 'yyyy-MM-ddT00:00:00.000', 'en-US');
 
       this.dateTo = this.isAnnual

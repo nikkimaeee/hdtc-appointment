@@ -510,9 +510,8 @@ export class DashboardComponent implements OnInit {
       },
     ];
     let dd: TDocumentDefinitions = {
-      header: 
-      {
-        margin:[10,10,10,10],
+      header: {
+        margin: [10, 10, 10, 10],
         columns: [
           {
             image: this.logo,
@@ -524,16 +523,15 @@ export class DashboardComponent implements OnInit {
           },
         ],
       },
-      footer:{
-        margin:[10,10,10,10],
+      footer: {
+        margin: [10, 10, 10, 10],
         columns: [
           '',
-          { text: formatDate(
-            this.dateToday,
-            'MMMM dd, yyyy',
-            'en-US'
-          ), alignment: 'right' }
-        ]
+          {
+            text: formatDate(this.dateToday, 'MMMM dd, yyyy', 'en-US'),
+            alignment: 'right',
+          },
+        ],
       },
       content: [
         {
