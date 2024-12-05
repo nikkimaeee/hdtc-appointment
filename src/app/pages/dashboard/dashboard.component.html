@@ -382,19 +382,6 @@
           </p-table>
         </div>
       </div>
-      <div class="col-12" *ngIf="!isAdmin">
-        <div class="card">
-          <h5>Upcoming Appointment:</h5>
-          <br />
-          <h6>
-            {{
-              nextAppointment
-                ? (nextAppointment[0] | date : 'MMMM dd, yyyy')
-                : '-'
-            }}
-          </h6>
-        </div>
-      </div>
       <!-- patient history -->
       <div class="col-12" *ngIf="!isAdmin">
         <div class="card">
