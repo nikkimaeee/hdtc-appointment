@@ -21,7 +21,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   appointmentDate!: string;
   appointmentTime!: IAppointmentTime[];
   today!: Date;
-  product!: IProduct[];
+  product: IProduct[] = [];
   private ngUnsubscribe = new Subject<void>();
   selectedProduct!: number;
   invalidDates: Array<Date> = [];
@@ -32,6 +32,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   sortField!: string;
   sortKey: any;
   productDetails: any;
+  showProduct: boolean = false;
 
   constructor(
     private router: Router,
@@ -97,7 +98,17 @@ export class ScheduleComponent implements OnInit, OnDestroy {
       });
 
     this.httpSvc.get('Admin/GetServices').subscribe(response => {
-      this.product = response;
+      response.forEach((element: any) => {
+        this.httpSvc
+          .get(`Appointment/GetImage/${element.id}`)
+          .subscribe(image => {
+            element.image = image;
+            this.product.push(element);
+            if (this.product.length === response.length) {
+              this.showProduct = true;
+            }
+          });
+      });
     });
 
     this.sortOptions = [
@@ -210,14 +221,16 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   selecitem(product: any) {
     this.selectedProduct = 0;
     this.productDetails = null;
-    this.httpSvc.get(`Admin/GetServicesById/${product.id}`).subscribe(response => {
-      this.selectedProduct = product.id;
-      this.productDetails = response;
-      this.getDisabledDays();
-      this.scheduleForm.patchValue({
-        product: product.id,
-    });
-    });
+    this.httpSvc
+      .get(`Admin/GetServicesById/${product.id}`)
+      .subscribe(response => {
+        this.selectedProduct = product.id;
+        this.productDetails = response;
+        this.getDisabledDays();
+        this.scheduleForm.patchValue({
+          product: product.id,
+        });
+      });
   }
 
   getgetSelected(product: any) {
