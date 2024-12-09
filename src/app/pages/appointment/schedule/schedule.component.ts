@@ -31,6 +31,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   sortOrder!: number;
   sortField!: string;
   sortKey: any;
+  productDetails: any;
 
   constructor(
     private router: Router,
@@ -47,13 +48,6 @@ export class ScheduleComponent implements OnInit, OnDestroy {
 
     this.today = new Date();
     this.today.setDate(this.today.getDate() + 1);
-  }
-
-  get productDetails(): any {
-    if (this.product && this.product !== undefined) {
-      return this.product.find(x => x.id === this.selectedProduct);
-    }
-    return null;
   }
 
   isFullyBook(day: number, month: number, year: number): boolean {
@@ -214,10 +208,15 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   }
 
   selecitem(product: any) {
-    this.selectedProduct = product.id;
-    this.getDisabledDays();
-    this.scheduleForm.patchValue({
-      product: product.id,
+    this.selectedProduct = 0;
+    this.productDetails = null;
+    this.httpSvc.get(`Admin/GetServicesById/${product.id}`).subscribe(response => {
+      this.selectedProduct = product.id;
+      this.productDetails = response;
+      this.getDisabledDays();
+      this.scheduleForm.patchValue({
+        product: product.id,
+    });
     });
   }
 
