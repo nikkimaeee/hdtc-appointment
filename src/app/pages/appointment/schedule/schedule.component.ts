@@ -102,7 +102,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
         this.httpSvc
           .get(`Appointment/GetImage/${element.id}`)
           .subscribe(image => {
-            element.image = image;
+            element.image = image.image;
             this.product.push(element);
             if (this.product.length === response.length) {
               this.showProduct = true;

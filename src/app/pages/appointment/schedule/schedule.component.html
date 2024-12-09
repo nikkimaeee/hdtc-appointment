@@ -50,7 +50,7 @@
                         border: selectedProduct == product.id ? 'solid' : 'none'
                       }">
                       <div class="product-grid-item-content">
-                        <img [src]="'data:image/jpg;base64,' + product.image" />
+                        <img [src]="product.image" />
                         <div class="product-name">{{ product.name }}</div>
                       </div>
                       <div class="product-grid-item-bottom">
